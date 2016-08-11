@@ -1,0 +1,85 @@
+﻿@model BrnMall.Web.MallAdmin.Models.CreditLogListModel
+
+@section header{
+<title>积分日志列表</title>
+<link type="text/css" rel="stylesheet" href="/admin_mall/content/css/site.css"/>
+<script type="text/javascript" src="/admin_mall/scripts/jquery.js"></script>
+<script type="text/javascript" src="/admin_mall/scripts/showlist.js"></script>
+<script type="text/javascript" src="/admin_mall/content/my97datepicker/WdatePicker.js"></script>
+}
+
+@section body{
+<h1 class="rightH1">
+日志管理 &gt;&gt; 积分日志列表
+<div class="right">
+<div class="clear"></div>
+</div>
+<div class="clear"></div>
+</h1>
+@using (Html.BeginForm("creditloglist", "log"))
+{
+    
+<div class="dataListSearch">
+<table height="32">
+        <tbody>
+        <tr>
+        <td width="35"><img id="searchImg" src="/admin_mall/content/images/search1.gif"/></td>
+        <td>账户名：</td>
+        <td width="130">@Html.TextBox("AccountName", Model.AccountName, new { height = "18" })</td>
+        <td>&nbsp;&nbsp;&nbsp;开始时间：</td>
+        <td width="130">@Html.TextBox("StartTime", Model.StartTime, new { height = "18", onclick = "WdatePicker({el:'StartTime'})" })
+        </td>
+        <td>&nbsp;&nbsp;&nbsp;结束时间：</td>
+        <td width="130">@Html.TextBox("EndTime", Model.EndTime, new { height = "18", onclick = "WdatePicker({el:'EndTime'})" })
+        </td>
+       <td>
+       <input id="SearchLog" name="SearchLog" type="image" class="searchBut submit" src="/admin_mall/content/images/s.jpg" />
+       </td>
+      </tr>
+     </tbody></table>
+</div>
+<div class="dataList">
+<table width="100%">
+<thead>
+  <tr>
+    <th width="60" align="center">编号</th>
+    <th width="120" align="left" >用户</th>
+    <th width="120" align="left" >操作人</th>
+    <th width="80" align="left" >支付积分</th>
+    <th width="80" align="left" >等级积分</th>
+    <th align="left" >操作描述</th>
+    <th width="134" align="left" >操作时间</th>
+    </tr>
+</thead>
+  <tbody>
+  @foreach (DataRow row in Model.CreditLogList.Rows)
+  {
+  <tr>
+    <td align="center">@row["logid"]</td>
+    <td>@row["rusername"]</td>
+        <td>
+      @if (row["operator"].ToString() == "0")
+      {
+          @:系统 
+      }
+      else
+      {
+           @row["ousername"]
+      }
+</td>
+    <td></td>
+    <td>@row["rankcredits"]</td>
+    <td>@row["actiondes"]</td>
+    <td>@TypeHelper.ObjectToDateTime(row["actiontime"]).ToString("yyyy-MM-dd HH:mm:ss")</td>
+    </tr>
+  }
+</tbody>
+</table>
+</div>
+<div class="dataListEdit">
+<div class="page">
+    @Html.MallAdminPager(Model.PageModel)
+</div>
+</div>
+}
+}

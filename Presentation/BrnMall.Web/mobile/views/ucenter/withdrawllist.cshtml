@@ -1,0 +1,99 @@
+﻿@model BrnMall.Web.Mobile.Models.WithdrawalLogListModel
+@{
+    Layout = "~/mobile/Views/Shared/_layout.cshtml";
+    ViewBag.Title = "我的资产";
+    int applying = (int)WithdrawalState.applying;
+    int nopass = (int)WithdrawalState.nopass;
+    int pass = (int)WithdrawalState.pass;
+}
+@section headerSection{
+    <link href="@{@WorkContext.CSSCDN}/mobile/css/ucenter.css" rel="stylesheet" type="text/css">
+    <script src="@{@WorkContext.ScriptCDN}/mobile/scripts/ucenter.user.js" type="text/javascript"></script>
+    <script>
+    var getWithdrawalState=function(state)
+    {
+    var str="未知状态";
+     switch (state)
+     {
+         case @applying:
+         str="审核中"
+         break;
+         case @nopass:
+          str="不通过"
+          break;
+         case @pass:
+         str="已通过"
+          break;
+     }
+     return str;
+     }
+    </script>
+    }
+    <div style="width: 100%">
+        <table width="100%" border="0" cellpadding="0" cellspacing="0" class="tb-list">
+            <thead>
+                <tr>
+                    <th>
+                        提现金额
+                    </th>
+                    <th>
+                        申请状态
+                    </th>
+                    <th>
+                        申请时间
+                    </th>
+                    <th>
+                        操作
+                    </th>
+                </tr>
+            </thead>
+            <tbody id="wltable">
+                @foreach (WithdrawalLogInfo info in Model.WithdrawalLogList)
+                {
+                    <tr>
+                        <td>@info.ApplyAmount
+                        </td>
+                        <td>
+                            @switch (info.State)
+                            {
+                                case (int)WithdrawalState.applying:
+                                @:审核中
+                            break;
+                                case (int)WithdrawalState.nopass:
+                                @:不通过
+                             break;
+                                case (int)WithdrawalState.pass:
+                                @:已通过
+                                                         break;
+                            }
+                        </td>
+                        <td>@info.ApplyTime.ToString("yyyy-MM-dd HH:mm:ss")
+                        </td>
+                        <td>
+                            <a href="@Url.Action("WithdrawalDetail", "Ucenter", new { wid = info.RecordId })" class="redBt">
+                                详情</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+<div class="loading">
+    @if (Model.PageModel.HasNextPage)
+    {
+        <a id="loadBut" href="javascript:getWithdrawlList(userWithdrawlListPageNumber);"
+            class="loadMore"><span>加载更多</span></a>
+        <a id="lastPagePrompt" style="display: none;" href="javascript:void(0);" class="loadMore">
+            没有了</a>
+    }
+    else
+    {
+        <a id="loadBut" style="display: none;" href="javascript:void(0);" class="loadMore"><span>
+            加载更多</span></a>
+        <a id="lastPagePrompt" href="javascript:void(0);" class="loadMore">没有了</a>
+    }
+    <div id="loadPrompt" style="display: none;" class="loadAnimate">
+        <p class="list-loading">
+            <span></span>加载中...</p>
+    </div>
+</div>

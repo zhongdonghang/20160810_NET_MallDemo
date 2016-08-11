@@ -1,0 +1,362 @@
+﻿@model BrnMall.Web.Mobile.Models.ProductModel
+@{
+    Layout = "~/mobile/Views/Shared/_layout.cshtml";
+    ViewBag.Title = Model.ProductInfo.Name;
+}
+@section headerSection{
+    <link href="@{@WorkContext.CSSCDN}/mobile/css/content.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" type="text/css" href="@{@WorkContext.CSSCDN}/mobile/css/2013/index/index.css" charset="gbk"/>
+    <script src="@{@WorkContext.ScriptCDN}/mobile/scripts/product.js" type="text/javascript"></script>
+    <script src="@{@WorkContext.ScriptCDN}/mobile/scripts/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="@{@WorkContext.ScriptCDN}/mobile/scripts/html5/common.js"></script>
+    <script type="text/javascript" src="@{@WorkContext.ScriptCDN}/mobile/scripts/html5/spin.min.js"></script>
+    <script src="@{@WorkContext.ScriptCDN}/mobile/scripts/ucenter.user.js" type="text/javascript"></script>
+    <style>
+        .scroll-wrapper .scroller li img {
+        min-width: 300px;
+        }
+    </style>
+      <script type="text/javascript">
+        uid = @WorkContext.Uid;
+        pid = @Model.Pid;
+        isGuestSC = @WorkContext.MallConfig.IsGuestSC;
+    </script>
+    }
+<div class="conHeader">
+
+<div class="sliderBox scroll-wrapper" style=" width:300px; height:300px;" id="idContainer2" ontouchstart="touchStart(event)" ontouchmove="touchMove(event);" ontouchend="touchEnd(event);">
+    <ul class="slider scroller"  id="idSlider2" >
+    @foreach (ProductImageInfo info in Model.ProductImageList)
+    {
+    <li style="width: -100.0%">
+        <img src="@{@WorkContext.ImageCDN}/upload/store/@info.StoreId/product/show/thumb300_300/@info.ShowImg" style="width:300px !important; height:300px !important;">
+    </li>
+    }
+    </ul>
+    <ul class="new-banner-num new-tbl-type" id="idNum">
+    </ul>
+</div>
+ <input type="hidden" value="@Model.ProductImageList.Count" id="activity"/>
+<input type="hidden" value="15" id="crazy" />
+  <script>
+      //活动轮播图
+      var picCount = $("#activity").val();
+      $(".slider").css("width", (picCount * 300) + "px");
+      var forEach = function (array, callback) {
+          for (var i = 0, len = array.length; i < len; i++) { callback.call(this, array[i], i); }
+      }
+      var st = createPicMove("idContainer2", "idSlider2", picCount); //图片数量更改后需更改此数值
+      var nums = [];
+      //插入数字
+      for (var i = 0, n = st._count - 1; i <= n; i++) {
+          var li = document.createElement("li");
+          nums[i] = document.getElementById("idNum").appendChild(li);
+      }
+      //设置按钮样式
+      st.onStart = function () {
+          //forEach(nums, function(o, i){ o.className = ""})
+          forEach(nums, function (o, i) { o.className = st.Index == i ? "new-tbl-cell on" : "new-tbl-cell"; })
+      }
+      // 重新设置浮动
+      $("#idSlider2").css("position", "relative");
+
+      var _initX = 0;
+      var _finishX = 0;
+      var _startX = 0;
+      var _startY = 0;
+      function touchStart(event) {
+          _startX = event.touches[0].clientX;
+          _startY = event.touches[0].clientY;
+          _initX = _startX;
+      }
+      function touchMove(event) {
+          var touches = event.touches;
+          var _endX = event.touches[0].clientX;
+          var _endY = event.touches[0].clientY;
+          if (Math.abs(_endY - _startY) > Math.abs(_endX - _startX)) {
+              return;
+          }
+          event.preventDefault();
+          _finishX = _endX;
+          var _absX = Math.abs(_endX - _startX);
+          var lastX = $('#idSlider2').css('left').replace('px', '');
+          if (_startX > _endX) {
+              st.Stop();
+              $('#idSlider2').css('left', (parseInt(lastX) - _absX) + 'px');
+          } else {
+              st.Stop();
+              $('#idSlider2').css('left', (parseInt(lastX) + _absX) + 'px');
+          }
+          _startX = _endX;
+      }
+      //触屏  离开屏幕事件
+      function touchEnd(event) {
+          if (_finishX == 0) {
+              return;
+          }
+          if (_initX > _finishX) {
+              bindEvent(_initX, _finishX);
+          } else if (_initX < _finishX) {
+              bindEvent(_initX, _finishX);
+          }
+          _initX = 0;
+          _finishX = 0;
+      }
+
+      /**
+      *  绑定触屏触发事件
+      * param start
+      * param end
+      */
+      function bindEvent(start, end) {
+          if (start >= end) {
+              st.Next();
+          } else {
+              st.Previous();
+          }
+      }
+      st.Run();
+     
+
+
+  
+        </script>
+
+<div class="detail-price">
+    @{
+        string str1 = FavoriteProducts.IsExistFavoriteProduct(WorkContext.Uid, Model.Pid) ? "display:block" : "display:none";
+        string str2 = FavoriteProducts.IsExistFavoriteProduct(WorkContext.Uid, Model.Pid) ? "display:none" : "display:block";
+    } 
+<a href="javascript:cancelFavoriteProduct(@Model.Pid);" class="btn-sc on" id="isfavorite" style="@str1"><img src="@{@WorkContext.ImageCDN}/mobile/images/icon5.png"/>已收藏</a>
+<a href="javascript:collectProductToFavorite(@Model.Pid);" class="btn-sc" id="notfavorite" style="@str2"><img src="@{@WorkContext.ImageCDN}/mobile/images/icon4.png"/>收藏</a>
+</div>
+</div>
+
+<div class="conBox"><div class="info2"><p class="text1">@Model.ProductInfo.Name</p></div></div>
+
+<div class="conBox">
+<div class="info2"><p class="text1" >市场价：<a style="text-decoration:line-through">¥@Model.ProductInfo.MarketPrice</a></p></div>
+<div class="info2"><p class="text1">商城价：<a style="color:Red; font-weight:bold; font-size:larger">¥@Model.ProductInfo.ShopPrice</a></p></div>
+<div class="info2">
+<p class="text1">会员价：
+   @if (WorkContext.Uid > 0 && WorkContext.UserRankInfo != null)
+   {
+       string discountPrice = Products.GetUserProductPrice(Model.ProductInfo.Pid, WorkContext.Uid).ToString("0.00");
+       <a style="color:Red; font-weight:bold; font-size:larger">¥@discountPrice</a>
+   }
+   else
+   { 
+    <a style="color:Red;" href="@Url.Action("Login", "Account", new { returnUrl = Request.Url.PathAndQuery })">登录查看折扣</a>
+   }
+</p></div></div>
+<div class="h15"></div>
+<script type="text/javascript">
+    function promotionDesSH() {
+        if (document.getElementById("promotionDes").style.display == "none") {
+            document.getElementById("promotionDes").style.display = "block"
+        }
+        else {
+            document.getElementById("promotionDes").style.display = "none"
+        }
+    }
+</script>
+<div class="conBox">
+@foreach (ExtProductSKUItemInfo info in Model.ProductSKUList.FindAll(x => x.Pid == Model.Pid))
+{
+<div class="proInfo on"><div class="itmeP"><div class="dt">@info.AttrName：</div><div class="dd">@if (info.IsInput == 0)
+                                                                                                {@info.AttrValue}
+                                                                                                else
+                                                                                                {@info.InputValue}</div></div></div>
+}
+<div class="infoSelect">
+
+    @if (Model.ProductSKUList != null && Model.ProductSKUList.Count > 0)
+    {
+        int attrLayer = 0;
+        List<ExtProductSKUItemInfo> currentProductSKUItemList = Model.ProductSKUList.FindAll(x => x.Pid == Model.Pid);
+        List<KeyValuePair<int, ExtProductSKUItemInfo>> skuProductList = new List<KeyValuePair<int, ExtProductSKUItemInfo>>();
+        foreach (IGrouping<int, ExtProductSKUItemInfo> info in Model.ProductSKUList.GroupBy(x => x.Pid, x => x))
+        {
+            int attrValueIdKey = 1;
+            foreach (var item in info)
+            {
+                attrValueIdKey *= item.AttrValueId;
+            }
+            skuProductList.Add(new KeyValuePair<int, ExtProductSKUItemInfo>(attrValueIdKey, info.First<ExtProductSKUItemInfo>()));
+        }
+        List<ExtProductSKUItemInfo> attrList = new List<ExtProductSKUItemInfo>();
+        foreach (ExtProductSKUItemInfo info in Model.ProductSKUList)
+        {
+            if (attrList.Find(x => x.AttrId == info.AttrId) == null)
+            {
+                attrList.Add(info);
+            }
+        }
+        foreach (ExtProductSKUItemInfo info in attrList)
+        {
+            @:<div class="itmeP"><div class="dt">@info.AttrName：</div><div class="dd">
+            List<ExtProductSKUItemInfo> attrValueList = new List<ExtProductSKUItemInfo>();
+            foreach (ExtProductSKUItemInfo attrValue in Model.ProductSKUList)
+            {
+                if (attrValue.AttrId == info.AttrId && attrValueList.Find(x => x.AttrValueId == attrValue.AttrValueId) == null)
+                {
+                    attrValueList.Add(attrValue);
+                }
+            }
+
+            foreach (ExtProductSKUItemInfo attrValue in attrValueList)
+            {
+                int attrValueIdKey = 1;
+                for (int i = 0; i < currentProductSKUItemList.Count; i++)
+                {
+                    if (attrLayer != i)
+                    {
+                        attrValueIdKey *= currentProductSKUItemList[i].AttrValueId;
+                    }
+                    else
+                    {
+                        attrValueIdKey *= attrValue.AttrValueId;
+                    }
+                }
+                KeyValuePair<int, ExtProductSKUItemInfo> skuProduct = skuProductList.Find(x => x.Key == attrValueIdKey);
+                if (skuProduct.Value == null)
+                {
+                    <a href="#" class="gayBt">@if (attrValue.IsInput == 0)
+                                              { @attrValue.AttrValue }
+                                              else
+                                              { @attrValue.InputValue }</a>
+                }
+                else
+                {
+                    <a href="@Url.Action("product", new RouteValueDictionary { { "pid", skuProduct.Value.Pid } })" class="@if (skuProduct.Value.Pid == Model.Pid)
+                                                                                                                          { <text>redBt</text> }
+                                                                                                                          else
+                                                                                                                          { <text>gayBt</text>}">@if (attrValue.IsInput == 0)
+                                                                                                                                                 { @attrValue.AttrValue }
+                                                                                                                                                 else
+                                                                                                                                                 { @attrValue.InputValue }</a>
+                }
+            }
+            @:</div></div>
+            attrLayer++;
+        }
+    }
+    
+<div class="itmeP">
+<div class="dt">数量：</div>
+<div class="dd">
+<a href="javascript:void(0);" onclick="cutProductCount()" class="gayBt">-</a>
+<a href="javascript:void(0);" class="gayBt" style="padding:4px 0px;"><input style=" width:60px; text-align:center;border:0; background:none;" id="buyCount" name="buyCount" value="1" /></a>
+<a href="javascript:void(0);" onclick="addProuctCount()" class="gayBt">+</a>
+</div>
+</div>
+
+</div>
+</div>
+<div class="h15"></div>
+<div class="conBox">
+<div class="info"><a href="@Url.Action("index", "store", new RouteValueDictionary { { "storeId", Model.ProductInfo.StoreId } })"><span class="text">@Model.StoreInfo.Name</span></a><span class="icon-arr"></span></div>
+</div>
+<div class="h15"></div>
+<div class="conBox">
+<div class="proConC">
+<script type="text/javascript">
+    function detailsSH(i) {
+        document.getElementById("detailsCon1").style.display = "none";
+        document.getElementById("detailsCon2").style.display = "none";
+        document.getElementById("detailsCon3").style.display = "none";
+        document.getElementById("detailsCon" + i).style.display = "block";
+
+        document.getElementById("detailsTab1").className = "";
+        document.getElementById("detailsTab2").className = "";
+        document.getElementById("detailsTab3").className = "";
+        document.getElementById("detailsTab" + i).className = "on";
+    }
+</script>
+
+<ul class="proConNav">
+<li><a id="detailsTab1" href="javascript:void(0)" onclick="detailsSH(1)" class="on">商品介绍</a></li>
+<li><a id="detailsTab2" href="javascript:void(0)" onclick="detailsSH(2)">规格参数</a></li>
+<li><a id="detailsTab3" href="javascript:void(0)" onclick="detailsSH(3)">评价</a></li>
+</ul>
+
+<div id="detailsCon1" class="proEdit">@Html.Raw(Model.ProductInfo.Description)</div>
+<div id="detailsCon2" class="proEdit" style=" display:none;">
+<div align="center">
+<table width="100%" border="0" align="center" cellpadding="0" cellspacing="1" class="proTable" style="max-width:440px;">
+  <tbody>
+    @{
+        int tempAttrGroupId = 0;
+        foreach (ExtProductAttributeInfo info in Model.ExtProductAttributeList)
+        {
+            if (info.AttrGroupId != tempAttrGroupId)
+            {
+            <tr><th colspan="2" class="tdTitle">@info.AttrGroupName</th></tr><tr></tr>
+            }
+            if (info.IsInput == 0)
+            {
+			<tr><td class="tdTitle">@info.AttrName</td><td>@info.AttrValue</td></tr>
+            }
+            else
+            {
+			<tr><td class="tdTitle">@info.AttrName</td><td>@info.InputValue</td></tr>
+            }
+            tempAttrGroupId = info.AttrGroupId;
+        }
+    }
+  </tbody>
+</table>
+</div>
+</div>
+<div id="detailsCon3" class="proEdit" style=" display:none;">
+
+<table width="100%" border="0" >
+<tbody id="reviewBlock">
+@foreach (DataRow row in Model.ProductReviewList.Rows)
+{
+    string replymessage = row["replymessage"].ToString();
+    string pointstr = (TypeHelper.ObjectToDecimal(row["star"]) / 5 * 100).ToString();
+   <tr class="prclass"> 
+   <td style=" color:Gray; font-size:smaller; float:left">@row["nickname"]</td>
+   <td style=" color:Gray; font-size:smaller; float:right">@TypeHelper.ObjectToDateTime(row["buytime"]).ToString("yyyy-MM-dd HH:mm:ss")</td>
+   </tr>
+    <tr class="prclass1">
+   <td style=" float:left; max-width:65%; font-size:small;" align="left">@row["message"]</td>
+   <td style=" float:right"><div class="start"><b style=" width:@Html.Raw(pointstr)%;"></b></div></td>
+   </tr>
+    if (!string.IsNullOrWhiteSpace(replymessage))
+    { 
+    <tr class="prclass1">
+   <td style=" float:left; max-width:65%; font-size:small; color:Red" align="left">商家回复： @replymessage</td>
+   <td style=" float:right"></td>
+   </tr>
+    }
+   <tr class="prclass2"></tr>
+}
+</tbody>
+</table>
+<div class="loading">
+@if (Model.ReviewpageModel.HasNextPage)
+{
+<a id="loadBut" href="javascript:getProductReviewList(@Model.Pid,reviewListNextPageNumber);" class="loadMore"><span>加载更多</span></a>
+<a id="lastPagePrompt" style="display:none;" href="javascript:void(0);" class="loadMore">没有了</a>
+}
+else
+{
+<a id="loadBut" style="display:none;" href="javascript:void(0);" class="loadMore"><span>加载更多</span></a>
+<a id="lastPagePrompt" href="javascript:void(0);" class="loadMore">没有了</a>
+}
+<div id="loadPrompt" style="display:none;" class="loadAnimate"><p class="list-loading"><span></span>加载中...</p></div>
+</div>
+</div>
+
+<div id="addResult1" class="bg" style="display:none;position:absolute;left:0px;top:0px;background-color:rgb(13, 13, 13);filter:alpha(opacity=60);opacity: 0.6;width:100%;height:100%;z-index:8888;"></div>
+<div id="addResult2" class="cartTip" style="display:none;">
+  <div class="ico-succ"><span class="att-succ">添加成功！</span><span class="cart-succ">商品已成功加入购物车</span></div>
+  <div class="cp-lnk"><a href="javascript:void(0);" onclick="document.getElementById('addResult1').style.display = 'none';document.getElementById('addResult2').style.display = 'none';">再逛逛</a><a href="@Url.Action("index", "cart")"><span class="bar"></span>去购物车</a></div>
+</div>
+
+<div class="footerBar">
+  <div><a href="javascript:void(0)" onclick="addProductToCart(@Model.Pid, document.getElementById('buyCount').value, 0)" class="buybtn"><span></span>立即购买</a> </div>
+  <div><a href="javascript:void(0)" onclick="addProductToCart(@Model.Pid, document.getElementById('buyCount').value, 1)" class="cartbtn"><span></span>加入购物车</a> </div>
+</div>

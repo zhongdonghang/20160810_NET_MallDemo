@@ -1,0 +1,116 @@
+﻿@model BrnMall.Web.Mobile.Models.OrderListModel
+@{
+    Layout = "~/mobile/Views/Shared/_layout.cshtml";
+    ViewBag.Title = "订单列表";
+}
+@section headerSection{
+    <link href="@{@WorkContext.CSSCDN}/mobile/css/ucenter.css" rel="stylesheet" type="text/css">
+    <script src="@{@WorkContext.ScriptCDN}/mobile/scripts/ucenter.order.js?v=1" type="text/javascript"></script>
+}
+<div class="searchBox">
+    <div class="newSearch">
+        <form>
+        <input type="text" id="keyword" name="keyword" class="new-srch-input" value="@Model.KeyWord" style="color: #999999;"  placeholder="请输入您想查询的订单/商品名">
+        </form>
+        <a href="javascript:clearSearchKeyWord('keyword')" target="_self" class="new-s-close">
+        </a><a href="javascript:orderSearch(document.getElementById('keyword').value);" target="_self"
+            class="new-s-srch"><span></span></a>
+    </div>
+</div>
+<div class="pro" id="orderListBlock" style="background: white;">
+  @foreach (DataRow row in Model.OrderList.Rows)
+  {
+      OrderState orderState = (OrderState)TypeHelper.ObjectToInt(row["orderstate"]);
+      List<OrderProductInfo> orderProductList = Orders.GetOrderProductList(TypeHelper.ObjectToInt(row["oid"]), Model.OrderProductList);
+    <div class="proItme">
+    <div class="orderosn"><span>订单编号：@row["osn"]</span>
+    <b>&nbsp;&nbsp;
+    @{switch (orderState)
+    {
+        case OrderState.WaitPaying:
+            @:等待付款
+            break;
+        case OrderState.Confirming:
+            @:待确认
+            break;
+        case OrderState.Confirmed:
+            @:已确认
+            break;
+        case OrderState.PreProducting:
+            @:已备货
+            break;
+        case OrderState.Sended:
+            @:已发货
+            break;
+        case OrderState.Received:
+            @:已收货
+            break;
+        case OrderState.Cancelled:
+            @:已取消
+            break;
+        case OrderState.Returned:
+            @:已退货
+            break;
+        case OrderState.Complete:
+            @:已完成
+            break;
+        default:
+            @:未知状态
+            break;
+    }
+    }
+    &nbsp;&nbsp;
+    @if (TypeHelper.ObjectToInt(row["isreview"]) == 1)
+    { 
+        @:已评价
+    }
+    </b>
+    </div>
+    @foreach (var orderProduct in orderProductList)
+    {
+        <a href="@Url.Action("product", "catalog", new RouteValueDictionary { { "pid", orderProduct.Pid } })">
+            <img src="@{@WorkContext.ImageCDN}/upload/store/@orderProduct.StoreId/product/show/thumb60_60/@orderProduct.ShowImg"  onerror="nofindimg();">
+            <div class="order-msg"><p class="title">@orderProduct.Name</p><p class="price">¥@orderProduct.DiscountPrice x @orderProduct.RealCount<span></span></p></div>
+        </a>
+        
+    <div class="clear"></div>
+    }
+    <div class="clear"></div>
+    <a style=" margin-right:40px; float:right; color:#ED474A; font-weight:bold; font-size:90%;">支付金额：￥@row["surplusmoney"]</a>
+    <div class="clear"></div>
+    
+        <div class="proBt">
+            <a class="redBt" href="@Url.Action("orderinfo", new RouteValueDictionary { { "oid", TypeHelper.ObjectToInt(row["oid"]) } })" id="orderDetai@{@row["oid"]}">订单详情</a>
+            @if (orderState == OrderState.WaitPaying && TypeHelper.ObjectToInt(row["paymode"]) == 1)
+            {
+                <a class="redBt" href="@Url.Action("submitresult", "order", new RouteValueDictionary { { "oidList", row["oid"].ToString().Trim() } })" id="payOrderBut@{@row["oid"]}">在线支付</a>
+            }
+            @if ((orderState == OrderState.Received || orderState == OrderState.Complete) && TypeHelper.ObjectToInt(row["isreview"]) == 0)
+            {
+            <a class="redBt" href="@Url.Action("revieworder", new RouteValueDictionary { { "oid", TypeHelper.ObjectToInt(row["oid"]) } })">订单评价</a>
+            }
+            @if (orderState == OrderState.WaitPaying || (orderState == OrderState.Confirming && TypeHelper.ObjectToInt(row["paymode"]) == 0))
+            {
+            <a class="redBt" href="javascript:cancelOrder(@row["oid"], 0)" id="cancelOrderBut@{@row["oid"]}">取消订单</a>
+            }
+            @if (orderState == OrderState.Sended && TypeHelper.ObjectToInt(row["paymode"]) != 0)
+            { 
+            <a class="redBt" href="javascript:receiveProduct(@row["oid"], 0)" id="receiveProductBut@{@row["oid"]}">确认收货</a>
+            }
+        </div>
+    </div>
+  }
+</div>
+<div class="loading">
+@if (Model.PageModel.HasNextPage)
+{
+<a id="loadBut" href="javascript:getOrderList('@Model.StartAddTime','@Model.EndAddTime',@Model.OrderState,orderListNextPageNumber);" class="loadMore"><span>加载更多</span></a>
+<a id="lastPagePrompt" style="display:none;" href="javascript:void(0);" class="loadMore">没有了</a>
+}
+else
+{
+<a id="loadBut" style="display:none;" href="javascript:void(0);" class="loadMore"><span>加载更多</span></a>
+<a id="lastPagePrompt" href="javascript:void(0);" class="loadMore">没有了</a>
+}
+<div id="loadPrompt" style="display:none;" class="loadAnimate"><p class="list-loading"><span></span>加载中...</p></div>
+</div>

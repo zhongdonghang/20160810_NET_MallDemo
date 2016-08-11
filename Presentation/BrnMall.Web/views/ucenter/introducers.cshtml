@@ -1,0 +1,121 @@
+﻿@model BrnMall.Web.Models.IntroduceShowModel
+@{
+    Layout = "~/Views/Shared/_layout.cshtml";
+    ViewBag.Title = "收货地址-" + WorkContext.MallConfig.SiteTitle;
+}
+@section headerSection{
+    <link href="@{@WorkContext.CSSCDN}/css/base.css" rel="stylesheet" type="text/css" />
+    <link href="@{@WorkContext.CSSCDN}/css/ucenter.css" rel="stylesheet" type="text/css" />
+}
+<div class="bigBox" id="member">
+    <div class="box">
+        <div id="memberL">
+            <h2>
+                个人中心</h2>
+            <ul id="memberNav">
+                <li><a href="@Url.Action("userinfo")"><s>&gt;</s>账户信息</a></li>
+                <li><a href="@Url.Action("safeinfo")"><s>&gt;</s>账户安全</a></li>
+                <li><a href="@Url.Action("orderlist")"><s>&gt;</s>我的订单</a></li>
+                <li><a href="@Url.Action("shipaddresslist")"><s>&gt;</s>收货地址</a></li>
+                <li><a href="@Url.Action("favoriteproductlist")"><s>&gt;</s>收藏商品</a></li>
+                <li><a href="@Url.Action("favoritestorelist")"><s>&gt;</s>收藏店铺</a></li>
+                <li><a href="@Url.Action("paycreditloglist")"><s>&gt;</s>我的资产
+                </a></li>
+                @*<li><a href="@Url.Action("couponlist")"><s>&gt;</s>优惠劵</a></li>*@
+                <li><a href="@Url.Action("introducers")" class="hot"><s>&gt;</s>介绍关系</a></li>
+                <li><a href="@Url.Action("productconsultlist")"><s>&gt;</s>购买咨询</a></li>
+                <li><a href="@Url.Action("productreviewlist")"><s>&gt;</s>商品评价</a></li>
+                @*@if (WorkContext.PartUserInfo.StoreId < 2 || (WorkContext.StoreInfo != null && (WorkContext.StoreInfo.State == (int)StoreState.Applying || WorkContext.StoreInfo.State == (int)StoreState.ApplyFail)))
+    {
+    <li><a href="@Url.Action("storeapplystep1")"><s>&gt;</s>申请开店</a></li>
+    }*@
+            </ul>
+        </div>
+        <div id="memberR">
+            <div class="SHadress">
+                <h4 style="color: Red; font-weight: bolder">
+                    我的介绍人</h4>
+                @if (Model.introducer != null)
+                {
+                    <table width="40%">
+                        <thead>
+                            <tr>
+                                <th width="120" align="left">
+                                    昵称
+                                </th>
+                                <th width="120" align="left">
+                                    用户名
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>@Model.introducer.NickName
+                                </td>
+                                <td>@Model.introducer.UserName
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>  
+                }
+                else
+                { 
+                    @:无
+                                                }
+            </div>
+        </div>
+        <div id="memberR">
+            <div class="SHadress">
+                <h4 style="color: Red; font-weight: bolder">
+                    @("我介绍的会员（" + Model.introduceCount + "人）")</h4>
+                @if (Model.MyIntroducers != null && Model.MyIntroducers.Count() > 0)
+                {
+                    <table width="80%">
+                        <thead>
+                            <tr>
+                                <th width="120" align="left">
+                                    昵称
+                                </th>
+                                <th width="120" align="left">
+                                    用户名
+                                </th>
+                                <th width="220" align="left">
+                                    注册时间
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.MyIntroducers)
+                            {
+                                <tr>
+                                    <td>@item.NickName
+                                    </td>
+                                    <td>@item.UserName
+                                    </td>
+                                    <td>@item.AddTime
+                                    </td>
+                                </tr>
+                            }
+                            <tr>
+                                <td>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>  
+                }
+                else
+                { 
+                    @:无
+                                                }
+            </div>
+        </div>
+        <div class="clear">
+        </div>
+    </div>
+</div>

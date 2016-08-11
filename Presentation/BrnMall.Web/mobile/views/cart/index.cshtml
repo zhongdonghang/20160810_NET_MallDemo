@@ -1,0 +1,79 @@
+﻿@model BrnMall.Web.Mobile.Models.CartModel
+@{
+    Layout = "~/mobile/Views/Shared/_layout.cshtml";
+    ViewBag.Title = "我的购物车";
+}
+@section headerSection{
+    <link href="@{@WorkContext.CSSCDN}/mobile/css/buy.css?v=1" rel="stylesheet" type="text/css">
+    <script src="@{@WorkContext.ScriptCDN}/mobile/scripts/cart.js?v=1" type="text/javascript"></script>
+     <script type="text/javascript">
+        uid = @WorkContext.Uid;
+        isGuestSC = @WorkContext.MallConfig.IsGuestSC;
+    </script>
+}
+<div id="cartBody">
+@if (Model != null && Model.StoreCartList.Count > 0)
+{
+    foreach (StoreCartInfo storeCartInfo in Model.StoreCartList)
+    {
+        <div class="cartItme">
+            <div class="cartTitle"><input type="checkbox" class="checkbox" id="storeCartCheckbox@{@storeCartInfo.StoreInfo.StoreId}" storeId="@storeCartInfo.StoreInfo.StoreId" checked="checked" onclick="cancelOrSelectStoreCart(this)"/>@storeCartInfo.StoreInfo.Name</div>
+            @foreach (CartItemInfo cartItemInfo in storeCartInfo.CartItemList)
+            {
+                    CartProductInfo cartProductInfo = (CartProductInfo)cartItemInfo.Item;
+                    <div class="proInfo">
+                        <div class="price" ><a  style="color:Red">￥@Products.GetUserProductPrice(cartProductInfo.OrderProductInfo.Pid,WorkContext.Uid)</a>@*&nbsp;&nbsp;<a style="text-decoration:line-through ">￥@cartProductInfo.OrderProductInfo.ShopPrice</a>*@</div>
+                        <a class="del" href="javascript:void(0)" onclick="if (confirm('您确定要把该商品移出购物车吗？')) delCartProduct(@cartProductInfo.OrderProductInfo.Pid,0)"></a>
+                        <div class="proInfo1"><input type="checkbox" class="checkbox" name="cartItemCheckbox" storeId="@storeCartInfo.StoreInfo.StoreId" @{if (cartProductInfo.Selected)
+                                                                                                                                                           {<text>checked="checked"</text>}} value="0_@{@cartProductInfo.OrderProductInfo.Pid}" onclick="cancelOrSelectCartItem()"/></div>
+                        <div class="proInfo2">
+                            <a href="@Url.Action("product", "catalog", new RouteValueDictionary { { "pid", cartProductInfo.OrderProductInfo.Pid } })" class="proImg"><img src="@{@WorkContext.ImageCDN}/upload/store/@cartProductInfo.OrderProductInfo.StoreId/product/show/thumb60_60/@cartProductInfo.OrderProductInfo.ShowImg" onerror="nofindimg();" width="59" height="59" /></a>
+                            <div class="text">
+                                <a href="@Url.Action("product", "catalog", new RouteValueDictionary { { "pid", cartProductInfo.OrderProductInfo.Pid } })">@cartProductInfo.OrderProductInfo.Name</a>
+                                <div class="nb">
+                                    <span class="gayBt" onclick="changePruductCount(@cartProductInfo.OrderProductInfo.Pid,@Html.Raw((cartProductInfo.OrderProductInfo.BuyCount - 1).ToString()))">-</span>
+                                    <span class="gayBt"><input value="@cartProductInfo.OrderProductInfo.RealCount" onfocus="productNumberFocus(this)" onblur="productNumberBlur(this,@cartProductInfo.OrderProductInfo.Pid,0)" id="@("changeNumBox_"+cartProductInfo.OrderProductInfo.Pid)"/></span>
+                                    <span class="gayBt" onclick="changePruductCount(@cartProductInfo.OrderProductInfo.Pid,@Html.Raw((cartProductInfo.OrderProductInfo.BuyCount + 1).ToString()))">+</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+            }
+        </div>
+    }
+<div class="goToPay">
+<div class="allSelect left"><input class="checkbox" type="checkbox" checked="checked" id="selectAllBut_bottom" onclick="cancelOrSelectAllCartItem(this)"/></div>
+<p style="color: #e4393c; font-size:14px; margin:5px 0 0 10px;">总计:￥<span id="orderAmount">@Model.OrderAmount</span></p>
+<p style="color: #999; font-size:12px; margin-left:10px;">商品总额:￥<span id="productAmount">@Model.ProductAmount</span> 返现:￥<span id="fullCut">@Model.FullCut</span></p>
+<form action="@Url.Action("confirmorder", "order")" method="post"><input name="selectedCartItemKeyList" id="selectedCartItemKeyList" value="" type="hidden" /><a href="javascript:void(0)" onclick="goConfirmOrder()">结算</a></form>
+</div>
+}
+else
+{ 
+<div class="empty-sign" style="background: url(@{@WorkContext.ImageCDN}/mobile/images/cartNull.png) no-repeat center center;background-size: 100px 100px;height: 110px;margin-top: 33px;"></div>
+<div style="line-height:2em; text-align:center;">购物车空空如也，快去购物吧</div>
+<div style=" padding:15px 0;text-align:center;"><a href="@Url.Action("index", "home")" class="redBt" style="text-decoration:none; font-size:16px; padding:5px 35px;">去逛逛</a></div>
+}
+</div>
+
+<div id="fullSendBlock" class="HGbox" style=" display:none;">
+<div class="HGtitle">
+<div class="left">请选择商品</div>
+<div class="right"><a href="javascript:closeFullSendBlock()" class="redBt">取消</a></div>
+<div class="right" style=" margin:0px 10px 0px 0px;"><a href="javascript:addFullSend()" class="redBt">确定</a></div>
+<div class="clear"></div>
+</div>
+<div id="fullSendProductList"></div>
+</div>
+<div id="fullSendMask" class="bg" style="display:none;position:absolute;left:0px;top:0px;background-color:#000;filter:alpha(opacity=90);opacity: 0.9;width:100%;height:100%;z-index:8888;"></div>
+
+@section footerSection{
+    <script type="text/javascript">
+        //高度需要计算 .bg的高度 = 当前body的高度
+        document.getElementById("fullSendMask").style.height = document.body.scrollHeight + "px";
+</script>
+}
+
+@Html.Raw(WorkContext.MallConfig.Script)
+

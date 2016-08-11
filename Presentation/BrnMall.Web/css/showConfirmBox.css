@@ -1,0 +1,70 @@
+
+.box-163css {
+	margin: 220px auto; width: 350px; position: relative;
+}
+.box-163css input {
+	background: rgb(204, 0, 0); border: 1px solid rgb(161, 0, 0); border-image: none; height: 24px; text-align: center; color: rgb(255, 255, 255); line-height: 20px; margin-left: 10px; cursor: pointer;
+}
+#dvMsgBox {
+	border-radius: 3px; width: 300px; overflow: hidden; font-family: Î¢ÈíÑÅºÚ; font-size: 12px; display: none; position: absolute; z-index: 9999;border:1px solid #993399;
+}
+#dvMsgBox .top {
+	width: 100%; height: 40px; padding-left: 16px; float: left; background-color: #993399;
+}
+#dvMsgBox .top .mbright {
+	height: 100%; padding-right: 6px;
+}
+#dvMsgBox .top .mbright .title {
+	height: 100%; color: rgb(255, 255, 255); line-height: 40px; overflow: hidden; font-size: 14px; vertical-align: middle;
+}
+#dvMsgBox .body {
+	background: rgb(255, 255, 255); padding-left: 10px;
+}
+#dvMsgBox .body .mbright {
+	background: rgb(255, 255, 255); padding-right: 2px;
+}
+#dvMsgBox .body .mbright .ct {
+	width: 100%; text-align: center; color:Black; line-height: 30px; font-size: 14px; vertical-align: middle;
+}
+#dvMsgBox .body .mbright .ct .pro {
+	background: rgb(255, 255, 255); border: 1px solid rgb(101, 147, 207); border-image: none; width: 280px; height: 25px; line-height: 23px; overflow: hidden;
+}
+#dvMsgBox .body .mbright .ct .pro .bg {
+	background: rgb(201, 223, 252); width: 0%; height: 100%;
+}
+#dvMsgBox .bottom {
+	background: rgb(255, 255, 255); padding-left: 6px;
+}
+#dvMsgBox .bottom .mbright {
+	height: 100%; padding-right: 6px;
+}
+input.btn {
+	margin: 0px auto; border-radius: 3px; border: currentColor; border-image: none; width: 56px; height: 25px; text-align: center; color: rgb(255, 255, 255); font-family: Î¢ÈíÑÅºÚ; cursor: pointer; background-color:#993399;
+}
+input.btnfocus {
+	margin: 0px auto; border-radius: 3px; border: currentColor; border-image: none; width: 56px; height: 25px; color: rgb(255, 255, 255); font-family: Î¢ÈíÑÅºÚ; cursor: pointer; background-color: #990399;
+}
+#dvMsgBox .icon {
+	width: 32px; height: 32px; margin-right: 10px; float: left;
+}
+#dvMsgBox .error {
+	background: url("icon-error.gif") no-repeat;
+}
+#dvMsgBox .info {
+	background: url("icon-info.gif") no-repeat;
+}
+#dvMsgBox .warning {
+	background: url("icon-warning.gif") no-repeat;
+}
+#dvMsgBox .clear {
+	clear: both;
+}
+#dvMsgBox .height {
+	height: 10px; line-height: 10px;
+}
+#ShowBolightBox {
+	left: 0px; top: 0px; display: none; position: absolute; z-index: 100; opacity: 0.5;  -moz-opacity: 0.5;
+}
+#dvMsgBtns {
+	width: 100%; text-align: center;
+}

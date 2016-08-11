@@ -1,0 +1,169 @@
+﻿@model BrnMall.Web.MallAdmin.Models.WithdrawalLogListModel
+
+@section header{
+<title>提现申请列表</title>
+<link type="text/css" rel="stylesheet" href="/admin_mall/content/css/site.css"/>
+<script type="text/javascript" src="/admin_mall/scripts/jquery.js"></script>
+<script type="text/javascript" src="/admin_mall/scripts/showlist.js"></script>
+<link rel="stylesheet" type="text/css"  href="/admin_mall/content/jbox/Skins/Default/jbox.css"/>
+<script type="text/javascript" src="/admin_mall/content/jbox/jquery.jBox-2.3.min.js"></script>
+<script type="text/javascript">
+    /*通过不通过操作*/
+    var passtagclick = function (flag, wid) {
+        var reasonstr = "请输入支付单号";
+        var title = "您确认已经转账？";
+        if (!flag) {
+            reasonstr = "请输入不通过理由";
+            title = "您确认该申请不通过？";
+        }
+        var html = "<div style='padding:10px;'>" + reasonstr + "<input type='text' id='reason' name='reason' style='width:280px;'/></div>";
+        $.jBox(html, { title: title, submit: function (v, h, f) {
+            if (f.reason == '') {
+                $.jBox.tip(reasonstr);
+                return false;
+            }
+            window.location.href = "/malladmin/amount/updatewithdrawl?wid=" + wid + "&flag=" + flag + "&reason=" + encodeURIComponent(f.reason);
+        }
+        });
+
+    };
+</script>
+}
+
+@section body{
+<h1 class="rightH1">
+资金管理 &gt;&gt; 提现申请列表
+<div class="clear"></div>
+</h1>
+@using (Html.BeginForm("WithdrawlList", "Amount"))
+{
+<div class="dataListSearch">
+<table height="32">
+        <tbody>
+         <tr>
+        <td width="35"><img id="searchImg" src="/admin_mall/content/images/search1.gif"/></td>
+        <td>
+          申请人：
+        </td>
+        <td width="130">
+            @Html.TextBoxFor(x => x.UserName, new { height = "18" })
+        </td>
+         <td>
+         提现类型：
+        </td>
+        <td width="90">
+          @Html.DropDownListFor(x => x.PayType, ViewData["withdrawTypeList"] as List<SelectListItem>)
+        </td>
+         <td>
+         申请状态：
+        </td>
+        <td width="90">
+          @Html.DropDownListFor(x => x.State, ViewData["withdrawStateList"] as List<SelectListItem>)
+        </td>
+       <td>
+       <input id="SearchWithdraw" name="SearchWithdraw" type="image" class="searchBut submit" src="/admin_mall/content/images/s.jpg" />
+       </td>
+      </tr>
+     </tbody>
+     </table>
+</div>
+
+<div class="dataList">
+<table width="100%">
+<thead>
+  <tr>
+    <th width="4"></th>
+    <th width="100">申请人</th>
+    <th width="100">提现金额</th>
+    <th width="220" align="left">申请状态</th>
+    <th align="left">账号信息</th>  
+    <th width="140" align="left">申请时间</th>  
+    <th width="100" align="left">操作人</th>  
+    <th width="140" align="left">操作时间</th>  
+    <th width="150" align="left">管理操作</th>
+    </tr>
+</thead>
+  <tbody>
+  @foreach (WithdrawalLogInfo info in Model.WithdrawalLogList)
+  {
+  <tr>
+    <td></td>
+    <td>@{
+      var userinfo = Users.GetPartUserById(info.Uid);
+      if (userinfo != null)
+      { 
+            <span>@userinfo.UserName</span>
+      }
+        }
+    </td>
+    <td>@info.ApplyAmount</td>
+    <td>  @switch (info.State)
+          {
+              case (int)WithdrawalState.applying:
+                                    @:审核中
+                                        break;
+              case (int)WithdrawalState.nopass:
+                                        @:不通过
+                                        break;
+              case (int)WithdrawalState.pass:
+                                        @:已通过
+                                        break;
+          }
+          @if (info.State == (int)WithdrawalState.nopass)
+          { 
+          <br /><span style=" color:Blue">不通过原因：@info.Reason</span>
+          }
+          else if (info.State == (int)WithdrawalState.pass)
+          { 
+           <br /><span style=" color:Blue">支付单号：@info.Reason</span>
+          }
+     </td>
+    <td>
+    @switch (info.PayType)
+    { 
+        case (int)WithdrawalType.Alipay:
+            @:支付宝：
+            break;
+            case (int)WithdrawalType.BankCard:
+            @:银行卡：
+            break;
+    }
+    @info.PayAccount  <br />
+    @info.ApplyRemark
+    </td>
+    <td>
+   @info.ApplyTime.ToString("yyyy-MM-dd HH:mm:ss")
+    </td>
+    <td>
+    @{
+var user = Users.GetPartUserById(info.OperatorUid);
+    }
+    @if (user != null)
+    { 
+        @:@user.UserName
+    }
+    </td>
+    <td> 
+    @if (user != null)
+    { 
+        @:@info.OperatTime.ToString("yyyy-MM-dd HH:mm:ss")
+    }</td>
+    <td>
+    @if (info.State == (int)WithdrawalState.applying)
+    {
+    <a class="editOperate " onclick="passtagclick(true,@info.RecordId)" >[通过]</a>
+    <a  class="editOperate" onclick="passtagclick(false,@info.RecordId)">[不通过]</a>
+    }
+    </td>
+    </tr>
+  }
+</tbody>
+</table>
+</div>
+<div class="dataListEdit">
+<div class="page">
+    @Html.MallAdminPager(Model.PageModel)
+</div>
+</div>
+}
+}

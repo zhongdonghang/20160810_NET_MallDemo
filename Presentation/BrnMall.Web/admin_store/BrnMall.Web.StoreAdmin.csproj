@@ -1,0 +1,337 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{8CEAE6C5-9468-4FDB-981F-F515A1AA6C4C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>BrnMall.Web.StoreAdmin</RootNamespace>
+    <AssemblyName>BrnMall.Web.StoreAdmin</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Web.WebPages, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AreaRegistration.cs" />
+    <Compile Include="controllers\BrandController.cs" />
+    <Compile Include="controllers\CategoryController.cs" />
+    <Compile Include="controllers\CouponController.cs" />
+    <Compile Include="controllers\HomeController.cs" />
+    <Compile Include="controllers\OrderController.cs" />
+    <Compile Include="controllers\ProductConsultController.cs" />
+    <Compile Include="controllers\ProductController.cs" />
+    <Compile Include="controllers\ProductReviewController.cs" />
+    <Compile Include="controllers\PromotionController.cs" />
+    <Compile Include="controllers\ShipCompanyController.cs" />
+    <Compile Include="controllers\StoreController.cs" />
+    <Compile Include="controllers\ToolController.cs" />
+    <Compile Include="models\CouponModel.cs" />
+    <Compile Include="models\HomeModel.cs" />
+    <Compile Include="models\OrderModel.cs" />
+    <Compile Include="models\ProductConsultModel.cs" />
+    <Compile Include="models\ProductModel.cs" />
+    <Compile Include="models\ProductReviewModel.cs" />
+    <Compile Include="models\PromotionModel.cs" />
+    <Compile Include="models\StoreModel.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Libraries\BrnMall.Core\BrnMall.Core.csproj">
+      <Project>{6B8E6156-1BD0-49E4-A693-A3F88025CF4C}</Project>
+      <Name>BrnMall.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Libraries\BrnMall.Services\BrnMall.Services.csproj">
+      <Project>{1323CA44-E7C4-47B1-A316-22E80777D885}</Project>
+      <Name>BrnMall.Services</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\BrnMall.Web.Framework\BrnMall.Web.Framework.csproj">
+      <Project>{C28BA0E8-6095-4F37-8CAF-A014CBD43CB9}</Project>
+      <Name>BrnMall.Web.Framework</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="content\jbox\Skins\Default\Desktop.ini" />
+    <None Include="content\ueditor\third-party\jquery-1.10.2.min.map" />
+    <None Include="views\coupon\addcoupontype.cshtml" />
+    <None Include="views\coupon\couponlist.cshtml" />
+    <None Include="views\coupon\couponproductlist.cshtml" />
+    <None Include="views\coupon\coupontypelist.cshtml" />
+    <None Include="views\coupon\sendcoupon.cshtml" />
+    <None Include="views\coupon\showcoupontype.cshtml" />
+    <None Include="views\home\index.cshtml" />
+    <None Include="views\home\menu.cshtml" />
+    <None Include="views\home\navbar.cshtml" />
+    <None Include="views\home\storeruninfo.cshtml" />
+    <None Include="views\order\receiveorder.cshtml" />
+    <None Include="views\order\orderinfo.cshtml" />
+    <None Include="views\order\orderlist.cshtml" />
+    <None Include="views\order\payorder.cshtml" />
+    <None Include="views\order\printorder.cshtml" />
+    <None Include="views\order\refundlist.cshtml" />
+    <None Include="views\order\sendorderproduct.cshtml" />
+    <None Include="views\order\updateorderdiscount.cshtml" />
+    <None Include="views\order\updateordershipfee.cshtml" />
+    <None Include="views\productconsult\productconsultlist.cshtml" />
+    <None Include="views\productconsult\reply.cshtml" />
+    <None Include="views\productreview\productreviewlist.cshtml" />
+    <None Include="views\productreview\reply.cshtml" />
+    <None Include="views\product\addproduct.cshtml" />
+    <None Include="views\product\addsku.cshtml" />
+    <None Include="views\product\addtimeproduct.cshtml" />
+    <None Include="views\product\editproduct.cshtml" />
+    <None Include="views\product\edittimeproduct.cshtml" />
+    <None Include="views\product\onsaleproductlist.cshtml" />
+    <None Include="views\product\outsaleproductlist.cshtml" />
+    <None Include="views\product\productimagelist.cshtml" />
+    <None Include="views\product\productkeywordlist.cshtml" />
+    <None Include="views\product\recyclebinproductlist.cshtml" />
+    <None Include="views\product\relateproductlist.cshtml" />
+    <None Include="views\product\timeproductlist.cshtml" />
+    <None Include="views\promotion\addbuysendpromotion.cshtml" />
+    <None Include="views\promotion\addfullcutpromotion.cshtml" />
+    <None Include="views\promotion\addfullsendpromotion.cshtml" />
+    <None Include="views\promotion\addgiftpromotion.cshtml" />
+    <None Include="views\promotion\addsinglepromotion.cshtml" />
+    <None Include="views\promotion\addsuitpromotion.cshtml" />
+    <None Include="views\promotion\buysendproductlist.cshtml" />
+    <None Include="views\promotion\buysendpromotionlist.cshtml" />
+    <None Include="views\promotion\editbuysendpromotion.cshtml" />
+    <None Include="views\promotion\editfullcutpromotion.cshtml" />
+    <None Include="views\promotion\editfullsendpromotion.cshtml" />
+    <None Include="views\promotion\editgiftpromotion.cshtml" />
+    <None Include="views\promotion\editsinglepromotion.cshtml" />
+    <None Include="views\promotion\editsuitpromotion.cshtml" />
+    <None Include="views\promotion\fullcutproductlist.cshtml" />
+    <None Include="views\promotion\fullcutpromotionlist.cshtml" />
+    <None Include="views\promotion\fullsendproductlist.cshtml" />
+    <None Include="views\promotion\fullsendpromotionlist.cshtml" />
+    <None Include="views\promotion\giftlist.cshtml" />
+    <None Include="views\promotion\giftpromotionlist.cshtml" />
+    <None Include="views\promotion\singlepromotionlist.cshtml" />
+    <None Include="views\promotion\suitproductlist.cshtml" />
+    <None Include="views\promotion\suitpromotionlist.cshtml" />
+    <None Include="views\shared\error.cshtml" />
+    <None Include="views\shared\prompt.cshtml" />
+    <None Include="views\shared\_layout.cshtml" />
+    <None Include="views\store\addstoreclass.cshtml" />
+    <None Include="views\store\addstoreshipfee.cshtml" />
+    <None Include="views\store\addstoreshiptemplate.cshtml" />
+    <None Include="views\store\editstore.cshtml" />
+    <None Include="views\store\editstoreclass.cshtml" />
+    <None Include="views\store\editstoreshipfee.cshtml" />
+    <None Include="views\store\editstoreshiptemplate.cshtml" />
+    <None Include="views\store\storeclasslist.cshtml" />
+    <None Include="views\store\storeshipfeelist.cshtml" />
+    <None Include="views\store\storeshiptemplatelist.cshtml" />
+    <None Include="views\Web.config" />
+    <None Include="views\_ViewStart.cshtml" />
+    <None Include="Web.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Web.linux.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="content\css\site.css" />
+    <Content Include="content\css\uploadify.css" />
+    <Content Include="content\flashes\uploadify.swf" />
+    <Content Include="content\images\logo.png" />
+    <Content Include="content\images\tree_open.gif" />
+    <Content Include="content\images\tree_close.gif" />
+    <Content Include="content\images\a.jpg" />
+    <Content Include="content\images\add.jpg" />
+    <Content Include="content\images\bg.jpg" />
+    <Content Include="content\images\bottombg.jpg" />
+    <Content Include="content\images\bt_right.jpg" />
+    <Content Include="content\images\cancel.jpg" />
+    <Content Include="content\images\delete.jpg" />
+    <Content Include="content\images\delete2.gif" />
+    <Content Include="content\images\edit.jpg" />
+    <Content Include="content\images\goback.jpg" />
+    <Content Include="content\images\ico1.jpg" />
+    <Content Include="content\images\li.jpg" />
+    <Content Include="content\images\li1.jpg" />
+    <Content Include="content\images\logo.jpg" />
+    <Content Include="content\images\menubg.jpg" />
+    <Content Include="content\images\menubg_bottom.jpg" />
+    <Content Include="content\images\menubg_top.jpg" />
+    <Content Include="content\images\menuli_bg.jpg" />
+    <Content Include="content\images\menuli_bg_hot.jpg" />
+    <Content Include="content\images\nav_bg_hot.jpg" />
+    <Content Include="content\images\progressbar.gif" />
+    <Content Include="content\images\refresh.jpg" />
+    <Content Include="content\images\right_ico.jpg" />
+    <Content Include="content\images\s.jpg" />
+    <Content Include="content\images\search1.gif" />
+    <Content Include="content\images\selectbg.gif" />
+    <Content Include="content\images\selectbgico.gif" />
+    <Content Include="content\images\submit.jpg" />
+    <Content Include="content\images\tagbg-left.jpg" />
+    <Content Include="content\images\tagbg.jpg" />
+    <Content Include="content\images\tip.gif" />
+    <Content Include="content\images\top_bg.jpg" />
+    <Content Include="content\images\uploadify-cancel.png" />
+    <Content Include="content\jbox\jquery.jBox-2.3.min.js" />
+    <Content Include="content\jbox\Skins\Default\images\jbox-button1.png" />
+    <Content Include="content\jbox\Skins\Default\images\jbox-button2.png" />
+    <Content Include="content\jbox\Skins\Default\images\jbox-close1.gif" />
+    <Content Include="content\jbox\Skins\Default\images\jbox-close2.gif" />
+    <Content Include="content\jbox\Skins\Default\images\jbox-content-loading.gif" />
+    <Content Include="content\jbox\Skins\Default\images\jbox-icons-ie6.gif" />
+    <Content Include="content\jbox\Skins\Default\images\jbox-icons.png" />
+    <Content Include="content\jbox\Skins\Default\images\jbox-loading1.gif" />
+    <Content Include="content\jbox\Skins\Default\images\jbox-loading2.gif" />
+    <Content Include="content\jbox\Skins\Default\images\jbox-loading3.gif" />
+    <Content Include="content\jbox\Skins\Default\images\jbox-title-icon.gif" />
+    <Content Include="content\jbox\Skins\Default\jbox.css" />
+    <Content Include="content\my97datepicker\calendar.js" />
+    <Content Include="content\my97datepicker\config.js" />
+    <Content Include="content\my97datepicker\lang\zh-cn.js" />
+    <Content Include="content\my97datepicker\My97DatePicker.htm" />
+    <Content Include="content\my97datepicker\skin\datePicker.gif" />
+    <Content Include="content\my97datepicker\skin\default\datepicker.css" />
+    <Content Include="content\my97datepicker\skin\default\img.gif" />
+    <Content Include="content\my97datepicker\skin\WdatePicker.css" />
+    <Content Include="content\my97datepicker\skin\whyGreen\bg.jpg" />
+    <Content Include="content\my97datepicker\skin\whyGreen\datepicker.css" />
+    <Content Include="content\my97datepicker\skin\whyGreen\img.gif" />
+    <Content Include="content\my97datepicker\WdatePicker.js" />
+    <Content Include="content\ueditor\dialogs\anchor\anchor.html" />
+    <Content Include="content\ueditor\dialogs\image\image.css" />
+    <Content Include="content\ueditor\dialogs\image\image.html" />
+    <Content Include="content\ueditor\dialogs\image\image.js" />
+    <Content Include="content\ueditor\dialogs\image\images\alignicon.jpg" />
+    <Content Include="content\ueditor\dialogs\image\images\bg.png" />
+    <Content Include="content\ueditor\dialogs\image\images\icons.gif" />
+    <Content Include="content\ueditor\dialogs\image\images\icons.png" />
+    <Content Include="content\ueditor\dialogs\image\images\image.png" />
+    <Content Include="content\ueditor\dialogs\image\images\progress.png" />
+    <Content Include="content\ueditor\dialogs\image\images\success.gif" />
+    <Content Include="content\ueditor\dialogs\image\images\success.png" />
+    <Content Include="content\ueditor\dialogs\internal.js" />
+    <Content Include="content\ueditor\dialogs\link\link.html" />
+    <Content Include="content\ueditor\dialogs\preview\preview.html" />
+    <Content Include="content\ueditor\dialogs\table\dragicon.png" />
+    <Content Include="content\ueditor\dialogs\table\edittable.css" />
+    <Content Include="content\ueditor\dialogs\table\edittable.html" />
+    <Content Include="content\ueditor\dialogs\table\edittable.js" />
+    <Content Include="content\ueditor\dialogs\table\edittd.html" />
+    <Content Include="content\ueditor\dialogs\table\edittip.html" />
+    <Content Include="content\ueditor\lang\zh-cn\images\copy.png" />
+    <Content Include="content\ueditor\lang\zh-cn\images\localimage.png" />
+    <Content Include="content\ueditor\lang\zh-cn\images\music.png" />
+    <Content Include="content\ueditor\lang\zh-cn\images\upload.png" />
+    <Content Include="content\ueditor\lang\zh-cn\zh-cn.js" />
+    <Content Include="content\ueditor\themes\default\css\ueditor.css" />
+    <Content Include="content\ueditor\themes\default\css\ueditor.min.css" />
+    <Content Include="content\ueditor\themes\default\dialogbase.css" />
+    <Content Include="content\ueditor\themes\default\images\anchor.gif" />
+    <Content Include="content\ueditor\themes\default\images\arrow.png" />
+    <Content Include="content\ueditor\themes\default\images\arrow_down.png" />
+    <Content Include="content\ueditor\themes\default\images\arrow_up.png" />
+    <Content Include="content\ueditor\themes\default\images\button-bg.gif" />
+    <Content Include="content\ueditor\themes\default\images\cancelbutton.gif" />
+    <Content Include="content\ueditor\themes\default\images\charts.png" />
+    <Content Include="content\ueditor\themes\default\images\cursor_h.gif" />
+    <Content Include="content\ueditor\themes\default\images\cursor_h.png" />
+    <Content Include="content\ueditor\themes\default\images\cursor_v.gif" />
+    <Content Include="content\ueditor\themes\default\images\cursor_v.png" />
+    <Content Include="content\ueditor\themes\default\images\dialog-title-bg.png" />
+    <Content Include="content\ueditor\themes\default\images\filescan.png" />
+    <Content Include="content\ueditor\themes\default\images\highlighted.gif" />
+    <Content Include="content\ueditor\themes\default\images\icons-all.gif" />
+    <Content Include="content\ueditor\themes\default\images\icons.gif" />
+    <Content Include="content\ueditor\themes\default\images\icons.png" />
+    <Content Include="content\ueditor\themes\default\images\loaderror.png" />
+    <Content Include="content\ueditor\themes\default\images\loading.gif" />
+    <Content Include="content\ueditor\themes\default\images\lock.gif" />
+    <Content Include="content\ueditor\themes\default\images\neweditor-tab-bg.png" />
+    <Content Include="content\ueditor\themes\default\images\pagebreak.gif" />
+    <Content Include="content\ueditor\themes\default\images\scale.png" />
+    <Content Include="content\ueditor\themes\default\images\sortable.png" />
+    <Content Include="content\ueditor\themes\default\images\spacer.gif" />
+    <Content Include="content\ueditor\themes\default\images\sparator_v.png" />
+    <Content Include="content\ueditor\themes\default\images\table-cell-align.png" />
+    <Content Include="content\ueditor\themes\default\images\tangram-colorpicker.png" />
+    <Content Include="content\ueditor\themes\default\images\toolbar_bg.png" />
+    <Content Include="content\ueditor\themes\default\images\unhighlighted.gif" />
+    <Content Include="content\ueditor\themes\default\images\upload.png" />
+    <Content Include="content\ueditor\themes\default\images\videologo.gif" />
+    <Content Include="content\ueditor\themes\default\images\word.gif" />
+    <Content Include="content\ueditor\themes\default\images\wordpaste.png" />
+    <Content Include="content\ueditor\themes\iframe.css" />
+    <Content Include="content\ueditor\third-party\codemirror\codemirror.css" />
+    <Content Include="content\ueditor\third-party\codemirror\codemirror.js" />
+    <Content Include="content\ueditor\third-party\jquery-1.10.2.js" />
+    <Content Include="content\ueditor\third-party\jquery-1.10.2.min.js" />
+    <Content Include="content\ueditor\third-party\SyntaxHighlighter\shCore.js" />
+    <Content Include="content\ueditor\third-party\SyntaxHighlighter\shCoreDefault.css" />
+    <Content Include="content\ueditor\third-party\webuploader\Uploader.swf" />
+    <Content Include="content\ueditor\third-party\webuploader\webuploader.css" />
+    <Content Include="content\ueditor\third-party\webuploader\webuploader.custom.js" />
+    <Content Include="content\ueditor\third-party\webuploader\webuploader.custom.min.js" />
+    <Content Include="content\ueditor\third-party\webuploader\webuploader.flashonly.js" />
+    <Content Include="content\ueditor\third-party\webuploader\webuploader.flashonly.min.js" />
+    <Content Include="content\ueditor\third-party\webuploader\webuploader.html5only.js" />
+    <Content Include="content\ueditor\third-party\webuploader\webuploader.html5only.min.js" />
+    <Content Include="content\ueditor\third-party\webuploader\webuploader.js" />
+    <Content Include="content\ueditor\third-party\webuploader\webuploader.min.js" />
+    <Content Include="content\ueditor\third-party\webuploader\webuploader.withoutimage.js" />
+    <Content Include="content\ueditor\third-party\webuploader\webuploader.withoutimage.min.js" />
+    <Content Include="content\ueditor\third-party\zeroclipboard\ZeroClipboard.js" />
+    <Content Include="content\ueditor\third-party\zeroclipboard\ZeroClipboard.min.js" />
+    <Content Include="content\ueditor\third-party\zeroclipboard\ZeroClipboard.swf" />
+    <Content Include="content\ueditor\ueditor.all.js" />
+    <Content Include="content\ueditor\ueditor.config.js" />
+    <Content Include="content\ueditor\ueditor.parse.js" />
+    <Content Include="scripts\jquery.js" />
+    <Content Include="scripts\jquery.uploadify.js" />
+    <Content Include="scripts\jquery.validate.js" />
+    <Content Include="scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="scripts\product.js" />
+    <Content Include="scripts\region.js" />
+    <Content Include="scripts\selectlist.js" />
+    <Content Include="scripts\showlist.js" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

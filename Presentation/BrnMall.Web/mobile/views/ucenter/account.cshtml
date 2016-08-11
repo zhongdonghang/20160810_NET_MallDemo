@@ -1,0 +1,26 @@
+﻿@{
+    Layout = "~/mobile/Views/Shared/_layout.cshtml";
+    ViewBag.Title = "账户中心";
+}
+@section headerSection{
+    <link href="@{@WorkContext.CSSCDN}/mobile/css/ucenter.css" rel="stylesheet" type="text/css">
+}
+<div class="userInfo">
+<ul>
+<li><a href="@Url.Action("EditUser")">修改用户信息<span></span></a></li>
+@if (WorkContext.LoginType != 1)
+{
+<li><a href="@Url.Action("safeverify", new RouteValueDictionary { { "act", "updatePassword" } })">修改密码<span></span></a></li>  
+<li><a href="@Url.Action("safeverify", new RouteValueDictionary { { "act", "updatePayPassword" } })">修改支付密码<span></span></a></li>
+<li><a href="@Url.Action("shipaddresslist")">收货地址<span></span></a></li>
+<li><a href="@Url.Action("introducers")">介绍人关系<span></span></a></li>
+<li><a href="@Url.Action("MyWeiXin", "Account")">账号绑定<span></span></a></li>
+}
+else
+{ 
+    <li><a href="@Url.Action("shipaddresslist")">收货地址<span></span></a></li>
+    <li><a href="@Url.Action("logout", "account", new RouteValueDictionary { { "returnUrl", WorkContext.Url } })">退出当前账户<span></span></a></li>
+}
+
+</ul>
+</div>

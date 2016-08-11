@@ -1,0 +1,64 @@
+﻿@model BrnMall.Web.Mobile.Models.ProductDetailsModel
+@{
+    Layout = "~/mobile/Views/Shared/_layout.cshtml";
+    ViewBag.Title = "商品详情";
+}
+@section headerSection{
+    <link href="@{@WorkContext.CSSCDN}/mobile/css/content.css" rel="stylesheet" type="text/css">
+}
+<div class="proConC">
+<script type="text/javascript">
+    function detailsSH(i) {
+        document.getElementById("detailsCon1").style.display = "none";
+        document.getElementById("detailsCon2").style.display = "none";
+        document.getElementById("detailsCon3").style.display = "none";
+        document.getElementById("detailsCon4").style.display = "none";
+        document.getElementById("detailsCon" + i).style.display = "block";
+
+        document.getElementById("detailsTab1").className = "";
+        document.getElementById("detailsTab2").className = "";
+        document.getElementById("detailsTab3").className = "";
+        document.getElementById("detailsTab4").className = "";
+        document.getElementById("detailsTab" + i).className = "on";
+    }
+</script>
+
+<ul class="proConNav">
+<li><a id="detailsTab1" href="javascript:void(0)" onclick="detailsSH(1)" class="on">商品介绍</a></li>
+<li><a id="detailsTab2" href="javascript:void(0)" onclick="detailsSH(2)">规格参数</a></li>
+<li><a id="detailsTab3" href="javascript:void(0)" onclick="detailsSH(3)">包装清单</a></li>
+<li><a id="detailsTab4" href="javascript:void(0)" onclick="detailsSH(4)">售后服务</a></li>
+</ul>
+
+<div id="detailsCon1" class="proEdit">@Html.Raw(Model.ProductInfo.Description)</div>
+<div id="detailsCon2" class="proEdit" style=" display:none;">
+<div align="center">
+<table width="100%" border="0" align="center" cellpadding="0" cellspacing="1" class="proTable" style="max-width:440px;">
+  <tbody>
+    @{
+        int tempAttrGroupId = 0;
+        foreach (ExtProductAttributeInfo info in Model.ExtProductAttributeList)
+        {
+            if (info.AttrGroupId != tempAttrGroupId)
+            {
+            <tr><th colspan="2" class="tdTitle">@info.AttrGroupName</th></tr><tr></tr>
+            }
+            if (info.IsInput == 0)
+            {
+			<tr><td class="tdTitle">@info.AttrName</td><td>@info.AttrValue</td></tr>
+            }
+            else
+            {
+			<tr><td class="tdTitle">@info.AttrName</td><td>@info.InputValue</td></tr>
+            }
+            tempAttrGroupId = info.AttrGroupId;
+        }
+    }
+  </tbody>
+</table>
+</div>
+</div>
+<div id="detailsCon3" class="proEdit" style=" display:none;"></div>
+<div id="detailsCon4" class="proEdit" style=" display:none;"></div>
+
+</div>

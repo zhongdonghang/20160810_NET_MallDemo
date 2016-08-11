@@ -1,0 +1,88 @@
+﻿@model BrnMall.Web.Mobile.Models.WithdrawalLogModel
+@{
+    Layout = "~/mobile/Views/Shared/_layout.cshtml";
+    ViewBag.Title = "用户信息编辑";
+}
+@section headerSection{
+    <link href="@{@WorkContext.CSSCDN}/mobile/css/buy.css" rel="stylesheet" type="text/css">
+    <script src="@{@WorkContext.ScriptCDN}/mobile/scripts/region.js" type="text/javascript"></script>
+    <script src="@{@WorkContext.ScriptCDN}/mobile/scripts/ucenter.user.js" type="text/javascript"></script>
+    <script src="@{@WorkContext.ScriptCDN}/admin_mall/scripts/jquery.js" type="text/javascript"></script>
+    <style>
+        .ADcell .txtbox
+        {
+            height: 30px;
+            background: #fff;
+            font-weight: normal;
+            text-indent: 10px;
+            vertical-align: top;
+            -webkit-appearance: none;
+            width: 100%;
+        }
+        .ADcellCon span{width:28%; font-size:small;vertical-align: middle; }
+         .ADcellCon p{width:100%; float:left ; font-size:smaller;}
+        .uetip
+        {
+             margin-left:92px;
+             color:Red;
+            }
+    </style>
+}
+ <div class="allCon">
+ </div>
+@using (Html.BeginForm())
+{
+    <div class="allCon">
+        <div class="ADcell">
+            <div class="ADcellCon">
+                 <span>*提现金额：</span>
+                <p> @Html.TextBoxFor(m => m.ApplyAmount, new { @class = "txtbox", @style = "width:25%"}) 元 &nbsp;&nbsp;&nbsp;可提现：<font color="#e4393c">@WorkContext.UserAmount</font>元</p>
+            </div>
+            <div class="uetip">@Html.ValidationMessageFor(x => x.ApplyAmount)</div>
+        </div>
+        <div class="ADcell">
+            <div class="ADcellCon">
+                <span>*提现方式：</span>
+                <p> @Html.DropDownListFor(x => x.PayType, ViewData["WithdrawalType"] as List<SelectListItem>, new { @class = "txtbox", @style = "width:70px" })</p>
+            </div>
+            <div class="uetip">@Html.ValidationMessageFor(x => x.PayType)</div>
+        </div>
+        <div class="ADcell">
+            <div class="ADcellCon">
+                <span>*账号：</span>
+                <p> @Html.TextBoxFor(m => m.PayAccount, new { @class = "txtbox", @style = "width:70%" })</p>
+            </div>
+            <div class="uetip">@Html.ValidationMessageFor(x => x.PayAccount)</div>
+        </div>
+        <div class="ADcell">
+            <div class="ADcellCon">
+                <span>*账号信息：</span>
+                <p>
+                     @Html.TextAreaFor(m => m.ApplyRemark, new { @class = "textarea", @style = "width:85%",rows = "4" })
+                     <br />1、银行卡提现，请填写姓名、所属银行及开通银行网点。2、支付宝提现，请填写真实姓名。
+                     </p>
+            </div>
+            <div class="uetip">@Html.ValidationMessageFor(x => x.ApplyRemark)</div>
+        </div>
+        <div class="ADcell">
+            <div class="ADcellCon">
+                <span>*联系方式：</span>
+                <p>
+                    @Html.TextBoxFor(m => m.Phone, new { @class = "txtbox", @style = "width:60%" })
+                </p>
+            </div>
+             <div class="uetip">@Html.ValidationMessageFor(x => x.Phone)</div>
+        </div>
+        
+    </div>
+    <a href="javascript:void(0)" id="sumbitBut" class="redBt subOrder">提交</a>
+      <br /> @:注意：请认真根据提示填写申请信息，这将直接影响到审核结果！
+                    <script type="text/javascript">
+                        $(function () {
+                            $("#sumbitBut").click(function () {
+                                $("form:first").submit();
+                                return false;
+                            })
+                        });
+            </script>
+}

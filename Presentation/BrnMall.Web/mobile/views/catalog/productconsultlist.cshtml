@@ -1,0 +1,47 @@
+﻿@model BrnMall.Web.Mobile.Models.ProductConsultListModel
+@{
+    Layout = "~/mobile/Views/Shared/_layout.cshtml";
+    ViewBag.Title = "咨询列表";
+}
+@section headerSection{
+    <link href="@{@WorkContext.CSSCDN}/mobile/css/content.css" rel="stylesheet" type="text/css">
+}
+
+<div class="QA">
+@foreach (ProductConsultInfo info in Model.ProductConsultList)
+{
+<a href="javascript:void(0);" class="to_detail">
+<ul>
+  <li class="q">
+    @info.ConsultMessage<br>
+    <span class="gray">@info.ConsultNickName</span>
+    <span class=" gray fr">@info.ConsultTime</span> 
+  </li>
+  <li class="a">@info.ReplyMessage</li>
+</ul>
+</a>
+}
+</div>
+
+
+@if (Model.ProductConsultList.Count > 0)
+{
+<div class="selectPage">
+@if (Model.PageModel.HasPrePage)
+{ 
+    <a href = "@Url.Action("productconsultlist", new RouteValueDictionary { { "pid", Model.ProductInfo.Pid }, { "page", Model.PageModel.PrePageNumber } })">上一页</a>
+}
+else
+{
+    <a href="javascript:;">上一页</a>
+}
+@if (Model.PageModel.HasNextPage)
+{
+    <a href = "@Url.Action("productconsultlist", new RouteValueDictionary { { "pid", Model.ProductInfo.Pid }, { "page", Model.PageModel.NextPageNumber } })">下一页</a>
+}
+else
+{
+    <a href="javascript:;">下一页</a>
+} 
+</div>
+}

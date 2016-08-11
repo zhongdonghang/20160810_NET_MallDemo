@@ -1,0 +1,160 @@
+﻿@model BrnMall.Web.Mobile.Models.SubmitResultModel
+@{
+    Layout = "~/mobile/Views/Shared/_layout.cshtml";
+    ViewBag.Title = "订单提交结果";
+}
+@section headerSection{
+    <link href="@{@WorkContext.CSSCDN}/mobile/css/buy.css" rel="stylesheet" type="text/css">
+    <script src="@{@WorkContext.ScriptCDN}/mobile/scripts/jquery-1.11.0.min.js" type="text/javascript"></script>
+    <script src="@{@WorkContext.ScriptCDN}/mobile/scripts/ucenter.order.js" type="text/javascript"></script>
+}
+<style type="text/css">
+    .order-tip
+    {
+        width: 85%;
+        padding: 10px;
+        margin: 20px auto;
+        background: #fffdf7;
+        border: 1px solid #cdc2b0;
+        border-radius: 5px;
+        -webkit-border-radius: 5px;
+        -moz-border-radius: 5px;
+    }
+    .order-tip h3
+    {
+        color: #db2929;
+        font-size: 1em;
+        font-weight: normal;
+    }
+    .order-tip p
+    {
+        padding-top: 15px;
+        font-size: 90%;
+    }
+    .pay-tip
+    {
+        width: 85%;
+        margin: 15px auto;
+        padding: 10px;
+        background: #f0ead4;
+        border: 1px solid #a4a4a4;
+        border-radius: 5px;
+        -webkit-border-radius: 5px;
+        -moz-border-radius: 5px;
+    }
+    .displaya
+    {
+        display: block;
+        width: 90%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .pay-tip strong
+    {
+        color: #db2929;
+        font-weight: normal;
+    }
+</style>
+<div class="order-tip">
+    @if (Model.AllPayMoney > 0)
+    {
+        foreach (var orderpro in Model.OrderProList)
+        {
+        <p>
+            <a class="displaya">
+                <img alt="" src="@{@WorkContext.ImageCDN}/upload/store/@orderpro.StoreId/product/show/thumb60_60/@orderpro.ShowImg" onerror="nofindimg();" style="vertical-align: middle; width:50px; height:50px;" />&nbsp;&nbsp;x
+                @orderpro.BuyCount &nbsp;&nbsp;@orderpro.Name</a></p>
+        }
+        
+        <p>
+            <div class="title">
+                支付信息</div>
+            @foreach (PluginInfo info in Model.PayPluginList)
+            {
+                if (info.SystemName == "alipay" || info.SystemName == "cod")
+                {
+                    continue;
+                }
+                if (info.SystemName == "creditpay")
+                {
+                    if (WorkContext.UserAmount < Model.AllPayMoney)
+                    { 
+                <div class="allCell">
+                    <span class="error"></span>@info.FriendlyName &nbsp;&nbsp;&nbsp;<a style="color: Red; font-size:80%;" >余额不足！</a>
+                </div>
+                    }
+                    else
+                    {
+                <div class="allCell" onclick="changePayPlugin('@info.SystemName','@Model.OidList')">
+                    <span class="@(info.SystemName == Model.PayPlugin.SystemName ? "radio checked" : "radio")">
+                    </span>@info.FriendlyName &nbsp;&nbsp;&nbsp;<a style="color: Red;font-size:80%;">可用余额为： @WorkContext.UserAmount
+                        元</a>
+                </div>
+                    }
+                }
+                else
+                {
+                <div class="allCell" onclick="changePayPlugin('@info.SystemName','@Model.OidList')">
+                    <span class="@(info.SystemName == Model.PayPlugin.SystemName ? "radio checked" : "radio")">
+                    </span>@info.FriendlyName
+                </div>
+                }
+            }
+        </p>   
+        
+        
+        
+        
+        
+        <p>
+            应付金额：<font style="color: #cc0000; font-weight: bold;">@Model.AllPayMoney 元</font></p>
+                                                             if (Model.PayPlugin.SystemName == "weixin")
+                                                             {
+        <p>
+            <a class="redBt" href="@Url.Action("pay", "weixin", new RouteValueDictionary { { "area", "" }, { "oidList", Model.OnlinePayOidList } })" >
+                立即支付</a>
+        </p>                                         
+                                                             }
+                                                             else if (Model.PayPlugin.SystemName == "creditpay")
+                                                             { 
+        <script type="text/javascript">
+            var comfirmPayCredit = function () {
+                var password = document.getElementById("password").value;
+                if (password == undefined || password == null || password.length < 1) {
+                    document.getElementById("error_tip").innerHTML = "请输入支付密码！";
+                    document.getElementById('error_tip').style.display = 'block';
+                    return;
+                }
+                $.ajax({
+                    url: '@Url.Action("CreditPay","Ucenter")',
+                    type: "GET",
+                    dataType: "json",
+                    data: { oidList: '@Model.OidList', password: password },
+                    success: function (data) {
+                        if (data == "succ") {
+                            location.href = '@Url.Action("OrderList", "Ucenter")';
+                        }
+                        else {
+                            document.getElementById("error_tip").innerHTML = data;
+                            document.getElementById('error_tip').style.display = 'block';
+                        }
+                    }
+                });
+            };
+        </script>
+        <p>
+            支付密码：<input type="password" id="password" style="height: 30px; width: 35%" />&nbsp;&nbsp;
+            <a href="javascript:comfirmPayCredit()" class="redBt">确认支付</a>
+            <div id="error_tip" style="color:Red;display:none"></div>
+            </p>
+        
+                                                             }
+    }
+    else
+    { 
+        <h3>
+            您的订单已经提交成功,我们会尽快为您发货！</h3>
+        <a href = "@Url.Action("OrderList", "ucenter")" class="gayBt">查看订单</a>
+    }
+</div>

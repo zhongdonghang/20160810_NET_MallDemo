@@ -1,0 +1,141 @@
+﻿@model BrnMall.Web.Models.OrderListModel
+@{
+    Layout = "~/Views/Shared/_layout.cshtml";
+    ViewBag.Title = "我的订单-" + WorkContext.MallConfig.SiteTitle;
+}
+@section headerSection{
+    <link href="@{@WorkContext.CSSCDN}/css/base.css" rel="stylesheet" type="text/css" />
+    <link href="@{@WorkContext.CSSCDN}/css/ucenter.css" rel="stylesheet" type="text/css" />
+    <script src="@{@WorkContext.ScriptCDN}/scripts/ucenter.order.js?v=1" type="text/javascript"></script>
+    }
+
+<div class="bigBox" id="member">
+<div class="box">
+<div id="memberL">
+<h2>个人中心</h2>
+<ul id="memberNav">
+    <li><a href="@Url.Action("userinfo")"><s>&gt;</s>账户信息</a></li>
+    <li><a href="@Url.Action("safeinfo")"><s>&gt;</s>账户安全</a></li>
+    <li><a href="@Url.Action("orderlist")" class="hot"><s>&gt;</s>我的订单</a></li>
+    <li><a href="@Url.Action("shipaddresslist")"><s>&gt;</s>收货地址</a></li>
+    <li><a href="@Url.Action("favoriteproductlist")"><s>&gt;</s>收藏商品</a></li>
+    <li><a href="@Url.Action("favoritestorelist")"><s>&gt;</s>收藏店铺</a></li>
+    <li><a href="@Url.Action("paycreditloglist")"><s>&gt;</s>我的资产</a></li>
+    @*<li><a href="@Url.Action("couponlist")"><s>&gt;</s>优惠劵</a></li>*@
+    <li><a href="@Url.Action("introducers")"><s>&gt;</s>介绍关系</a></li>
+    <li><a href="@Url.Action("productconsultlist")"><s>&gt;</s>购买咨询</a></li>
+    <li><a href="@Url.Action("productreviewlist")"><s>&gt;</s>商品评价</a></li>
+   @* @if (WorkContext.PartUserInfo.StoreId < 2 || (WorkContext.StoreInfo != null && (WorkContext.StoreInfo.State == (int)StoreState.Applying || WorkContext.StoreInfo.State == (int)StoreState.ApplyFail)))
+    {
+    <li><a href="@Url.Action("storeapplystep1")"><s>&gt;</s>申请开店</a></li>
+    }*@
+</ul>
+
+</div>
+<div id="memberR" style=" padding-bottom:0px;">
+<h2 id="memberRT">我的订单
+    <div class="searchList">
+    <form id="orderListForm">
+    @Html.DropDownListFor(x => x.OrderState, ViewData["orderStateList"] as List<SelectListItem>)
+    <input type="text" class="text" id="orderkeyword" value="@Model.KeyWord"  placeholder="请输入您想查询的订单/商品名"/>
+    <a href="javascript:orderSearch();" class="whiteBT">搜索</a>
+    <div class="clear"></div>
+    </form>
+    </div>
+</h2>
+<table width="100%" border="0" cellspacing="0" class="dingdan">
+<thead>
+  <tr>
+    <th>订单信息</th>
+    <th>收货人</th>
+    <th>支付金额</th>
+    <th>时间</th>
+    <th>订单状态</th>
+    <th>操作</th>
+  </tr>
+</thead>
+<tbody>
+  @foreach (DataRow row in Model.OrderList.Rows)
+  {
+      OrderState orderState = (OrderState)TypeHelper.ObjectToInt(row["orderstate"]);
+  <tr class="dingdanTH"><td colspan="6">订单编号: <a target="_blank" href="@Url.Action("orderinfo", new RouteValueDictionary { { "oid", TypeHelper.ObjectToInt(row["oid"]) } })">@row["osn"]</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="@Url.Action("index", "store", new RouteValueDictionary { { "storeId", TypeHelper.ObjectToInt(row["storeid"]) } })">@row["storename"]</a></td></tr>
+  <tr>
+    <td id="orderProductList">
+        <div class="proList">
+            @foreach (OrderProductInfo info in Orders.GetOrderProductList(TypeHelper.ObjectToInt(row["oid"]), Model.OrderProductList))
+            {
+            <a href="@Url.Action("product", "catalog", new RouteValueDictionary { { "pid", info.Pid } })">
+            <img src="@{@WorkContext.ImageCDN}/upload/store/@info.StoreId/product/show/thumb60_60/@info.ShowImg"  onerror="nofindimg();" width="50" height="50" />
+            @info.Name
+            </a>
+            }
+            <div class="clear"></div>
+        </div>
+    </td>
+    <td>@row["consignee"]</td>
+    <td>￥@row["surplusmoney"]<br />@row["shipconame"]</td>
+    <td>@Html.Raw(TypeHelper.ObjectToDateTime(row["addtime"]).ToString("yyyy-MM-dd"))<br />@Html.Raw(TypeHelper.ObjectToDateTime(row["addtime"]).ToString("HH:mm:ss"))</td>
+    <td id="orderState@{@row["oid"]}">
+    @switch (orderState)
+    {
+        case OrderState.WaitPaying:
+            @:等待付款
+            break;
+        case OrderState.Confirming:
+            @:待确认
+            break;
+        case OrderState.Confirmed:
+            @:已确认
+            break;
+        case OrderState.PreProducting:
+            @:已备货
+            break;
+        case OrderState.Sended:
+            @:已发货
+            break;
+        case OrderState.Received:
+            @:已收货
+            break;
+        case OrderState.Cancelled:
+            @:取消
+            break;
+        case OrderState.Returned:
+            @:退货
+            break;
+        case OrderState.Complete:
+            @:已完成
+            break;
+        default:
+            @:未知状态
+            break;
+    }
+    </td>
+    <td>
+        <a href="@Url.Action("orderinfo", new RouteValueDictionary { { "oid", TypeHelper.ObjectToInt(row["oid"]) } })" id="orderInfo@{@row["oid"]}">查看 </a>
+        @if (orderState == OrderState.WaitPaying && TypeHelper.ObjectToInt(row["paymode"]) == 1)
+        {
+        <a href="@Url.Action("SubmitResult", "order", new RouteValueDictionary { { "oidList", TypeHelper.ObjectToInt(row["oid"]) } })" id="payOrderBut@{@row["oid"]}">付款</a>
+        }
+        @if (orderState == OrderState.Sended && TypeHelper.ObjectToInt(row["paymode"]) == 1)
+        { 
+         <a href="javascript:receiveProduct(@row["oid"])" id="receiveProductBut@{@row["oid"]}">确认收货</a>
+        }
+        @if ((orderState == OrderState.Complete || orderState==OrderState.Received) && TypeHelper.ObjectToInt(row["isreview"]) == 0)
+        {
+        <a href="@Url.Action("revieworder", new RouteValueDictionary { { "oid", TypeHelper.ObjectToInt(row["oid"]) } })">评价</a>
+        }
+        @if (orderState == OrderState.WaitPaying || (orderState == OrderState.Confirming && TypeHelper.ObjectToInt(row["paymode"]) == 0))
+        {
+        <a href="javascript:cancelOrder(@row["oid"], 0)" id="cancelOrderBut@{@row["oid"]}">取消订单</a>
+        }
+    </td>
+  </tr>
+  }
+</tbody>
+</table>
+@Html.WebPager(Model.PageModel).ShowSummary(false)
+</div>
+<div class="clear"></div>
+</div>
+<div class="clear"></div>
+</div>

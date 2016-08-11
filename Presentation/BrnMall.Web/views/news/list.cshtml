@@ -1,0 +1,47 @@
+﻿@model BrnMall.Web.Models.NewsListModel
+@{
+    Layout = "~/Views/Shared/_layout.cshtml";
+    ViewBag.Title = "新闻列表-" + WorkContext.MallConfig.SiteTitle;
+}
+@section headerSection{
+    <link href="@{@WorkContext.CSSCDN}/css/base.css" rel="stylesheet" type="text/css" />
+    <link href="@{@WorkContext.CSSCDN}/css/help.css" rel="stylesheet" type="text/css" />
+    }
+
+<div class="breadcrumb box">
+</div>
+<div class="box">
+<div id="helpL">
+
+    @{
+        foreach (NewsTypeInfo info in Model.NewsTypeList)
+        {
+             <dl>
+             <dt><a href="@Url.Action("list", new { newsTypeId =info.NewsTypeId})" style="@(info.NewsTypeId==Model.NewsTypeId?"color:Red":"")">@info.Name</a></dt>
+             </dl>
+        }
+     
+    }
+
+</div>
+<div id="helpR">
+<div id="news">
+<h1 class="newsListT">@(string.IsNullOrWhiteSpace(Model.NewsTypeName) ? "新闻中心" : Model.NewsTypeName)</h1>
+<ul class="newsList">
+@{
+    foreach (DataRow row in Model.NewsList.Rows)
+    {
+        <li>
+            <a href="@Url.Action("details", new RouteValueDictionary { { "newsId", row["newsid"] } })">@row["title"]</a>
+            <span>@(TypeHelper.ObjectToDateTime(row["addtime"]).ToString("yyyy-MM-dd HH:mm:ss"))</span>
+        </li>
+    }
+    }
+</ul>
+@Html.WebPager(Model.PageModel)
+</div>
+</div>
+
+<div class="clear"></div>
+</div>
+

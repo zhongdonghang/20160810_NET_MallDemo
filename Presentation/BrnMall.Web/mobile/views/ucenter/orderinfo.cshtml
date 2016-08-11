@@ -1,0 +1,105 @@
+﻿@model BrnMall.Web.Mobile.Models.OrderInfoModel
+@{
+    Layout = "~/mobile/Views/Shared/_layout.cshtml";
+    ViewBag.Title = "订单详情";
+}
+@section headerSection{
+    <link href="@{@WorkContext.CSSCDN}/mobile/css/ucenter.css" rel="stylesheet" type="text/css">
+}
+<div class="pro">
+  
+<div class="proI2">
+<p>订单编号：@Model.OrderInfo.OSN</p>
+<p>订单金额：￥@Model.OrderInfo.SurplusMoney</p>
+<p>订单日期：@Model.OrderInfo.AddTime.ToString("yyyy-MM-dd HH:mm:ss")</p>
+<p>订单状态：<a  style=" color: red"> @{
+    switch ((OrderState)Model.OrderInfo.OrderState)
+    {
+        case OrderState.WaitPaying:
+            @:等待付款
+            break;
+        case OrderState.Confirming:
+            @:待确认
+            break;
+        case OrderState.Confirmed:
+            @:已确认
+            break;
+        case OrderState.PreProducting:
+            @:已备货
+            break;
+        case OrderState.Sended:
+            @:已发货
+            break;
+        case OrderState.Received:
+            @:已收货
+            break;
+        case OrderState.Cancelled:
+            @:已取消
+            break;
+        case OrderState.Returned:
+            @:已退货
+            break;
+        case OrderState.Complete:
+            @:已完成
+            break;
+        default:
+            @:未知状态
+            break;
+    }
+    }
+    </a>
+    </p>
+
+<div class="proBt">
+@if (Model.OrderInfo.OrderState < (int)OrderState.Sended || Model.OrderInfo.ShipTime.AddMonths(1) > DateTime.Now)
+{
+<a href="@Url.Action("orderactionlist", new RouteValueDictionary { { "oid", Model.OrderInfo.Oid } })" class="redBt">物流信息</a>
+}
+@if ((Model.OrderInfo.OrderState == (int)OrderState.Complete || Model.OrderInfo.OrderState == (int)OrderState.Received) && Model.OrderInfo.IsReview == 0)
+{
+<a class="redBt" href="@Url.Action("revieworder", new RouteValueDictionary { { "oid", Model.OrderInfo.Oid } })">评价</a>
+}
+</div>
+</div>
+
+@foreach (OrderProductInfo info in Model.OrderProductList)
+{
+<div class="proItme">
+<a href="@Url.Action("product", "catalog", new RouteValueDictionary { { "pid", info.Pid } })"><img src="@{@WorkContext.ImageCDN}/upload/store/@info.StoreId/product/show/thumb60_60/@info.ShowImg" onerror="nofindimg();" width="60px" height="60px"></a>
+<div class="order-msg"><p class="title">@info.Name</p><p class="price">¥@info.DiscountPrice</p><p>x @info.RealCount</p></div>
+</div>
+}
+
+<div class="proI2">
+<p class="i2Title">@Model.OrderInfo.Consignee<span>@Model.OrderInfo.Mobile</span></p>
+<div class="hr"></div>
+<p class="i2Title">@Model.RegionInfo.ProvinceName @Model.RegionInfo.CityName @Model.RegionInfo.Name @Model.OrderInfo.Address</p>
+</div>
+
+<div class="proI2">
+<p class="i2Title">付款方式:<span>@Model.OrderInfo.PayFriendName @(string.IsNullOrWhiteSpace(Model.OrderInfo.PaySN) ? "" : "（支付单号：" + Model.OrderInfo.PaySN + "）")</span></p>
+<div class="hr"></div>
+<p>商品金额:<span class="price">￥@Model.OrderInfo.ProductAmount</span></p>
+<p>返现:<span class="price">-￥@Model.OrderInfo.FullCut.ToString("0.00")</span></p>
+<p>折扣:<span class="price">-￥@Model.OrderInfo.Discount</span></p>
+<p>运费:<span class="price" >+￥@Model.OrderInfo.ShipFee</span></p>
+<div class="hr"></div>
+<p class="i2Title">应支付金额:<span style=" font-size:x-large; font-weight:bolder; color:Red;">￥@Model.OrderInfo.SurplusMoney</span></p>
+</div>
+
+<div class="proI2">
+<div class="hr"></div>
+<p class="i2Title">配送方式:
+  @if (Model.OrderInfo.ShipMode == (int)ShipMode.SelfGet)
+    { 
+        @:到店自提
+    }
+    else
+    {
+       @Model.OrderInfo.ShipCoName @(string.IsNullOrWhiteSpace(Model.OrderInfo.ShipSN) ? "" : "（配送单号：" + Model.OrderInfo.ShipSN + "）")
+    }
+</p>
+<p class="i2Title">配送时间:@(Model.OrderInfo.ShipTime.Year == 1900 ? "" : Model.OrderInfo.ShipTime.ToString("yyyy-MM-dd HH:mm:ss"))</p>
+</div>
+
+</div>

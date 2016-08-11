@@ -1,0 +1,111 @@
+﻿@model BrnMall.Core.WithdrawalLogInfo
+@{
+    Layout = "~/mobile/Views/Shared/_layout.cshtml";
+    ViewBag.Title = "提现申请详情";
+}
+@section headerSection{
+    <link href="@{@WorkContext.CSSCDN}/mobile/css/buy.css" rel="stylesheet" type="text/css">
+    <style>
+        .ADcell .txtbox
+        {
+            height: 30px;
+            background: #fff;
+            font-weight: normal;
+            text-indent: 10px;
+            vertical-align: top;
+            -webkit-appearance: none;
+            width: 100%;
+        }
+        .ADcellCon span{width:28%; font-size:small;vertical-align: middle; }
+         .ADcellCon p{width:100%; float:left ; font-size:smaller;}
+        .uetip
+        {
+             margin-left:92px;
+             color:Red;
+            }
+    </style>
+}
+ <div class="allCon">
+ </div>
+    <div class="allCon">
+        <div class="ADcell">
+            <div class="ADcellCon">
+                 <span>提现金额：</span>
+                <p> @Model.ApplyAmount 元</p>
+            </div>
+        </div>
+        <div class="ADcell">
+            <div class="ADcellCon">
+                 <span>申请状态：</span>
+                <p> @switch (Model.State)
+                    {
+                        case (int)WithdrawalState.applying:
+                                    @:审核中
+                                        break;
+                        case (int)WithdrawalState.nopass:
+                                        @:不通过
+                                        break;
+                        case (int)WithdrawalState.pass:
+                                        @:已通过
+                                        break;
+                    } </p>
+            </div>
+        </div>
+        <div class="ADcell">
+            <div class="ADcellCon">
+                 <span>账号：</span>
+                <p> @switch (Model.PayType)
+                                 { 
+                                     case (int)WithdrawalType.Alipay:
+                                         @:支付宝：
+                                         break;
+                                         case (int)WithdrawalType.BankCard:
+                                         @:银行卡：
+                                         break;
+                                 } 
+                @Model.PayAccount </p>
+            </div>
+        </div>
+        <div class="ADcell">
+          <div class="ADcellCon">
+                 <span>账号信息：</span>
+                <p> @Model.ApplyRemark </p>
+            </div>
+        </div>
+        <div class="ADcell">
+            <div class="ADcellCon">
+                 <span>申请时间：</span>
+                <p> @Model.ApplyTime.ToString("yyyy-MM-dd HH:mm:ss") </p>
+            </div>
+        </div>
+        @if (Model.State == (int)WithdrawalState.nopass)
+        {
+         <div class="ADcell">
+            <div class="ADcellCon">
+                 <span>批示信息：</span>
+                <p style=" color:Red"> 不通过原因：@Model.Reason </p>
+            </div>
+        </div>
+            <div class="ADcell">
+            <div class="ADcellCon">
+                 <span>批示时间：</span>
+                <p> @Model.OperatTime.ToString("yyyy-MM-dd HH:mm:ss")</p>
+            </div>
+        </div>
+        }
+         @if (Model.State == (int)WithdrawalState.pass)
+        {
+         <div class="ADcell">
+            <div class="ADcellCon">
+                 <span>批示信息：</span>
+                <p> 支付单号：@Model.Reason </p>
+            </div>
+        </div>
+            <div class="ADcell">
+            <div class="ADcellCon">
+                 <span>批示时间：</span>
+                <p> @Model.OperatTime.ToString("yyyy-MM-dd HH:mm:ss")</p>
+            </div>
+        </div>
+        }
+    </div>

@@ -1,0 +1,61 @@
+﻿@model BrnMall.Web.Models.BannerListModel
+@{
+    Layout = "~/Views/Shared/_layout.cshtml";
+}
+@section headerSection{
+    <link href="@{@WorkContext.CSSCDN}/css/list.css" rel="stylesheet" type="text/css" />
+    <link href="@{@WorkContext.CSSCDN}/css/base.css" rel="stylesheet" type="text/css" />
+    }
+    
+<div class="breadcrumb box1210">
+    <strong><a href="@Url.Action("BrandList", new RouteValueDictionary { { "cateId",0 } })">品牌</a></strong>
+   
+    <span>&nbsp;&gt;&nbsp;<a>@Model.CateName</a></span>
+
+</div>
+<div class="block clearfix">
+
+<div class="AreaL">
+    
+<div id="category_tree">
+	<div class="tit">分类</div>
+	<dl class="clearfix" style=" overflow:hidden;">
+		<div class="box1 cate" id="cate" style=" width:198px; padding:0px">
+            @foreach (var cate in Model.CateList)
+           {
+                string str=cate.CateId == Model.CateId? "style='color :red'":"";
+               <div class="list_m">
+               <h1 onclick="tab(0)">
+                <span class="f_l">
+                    <img src="@{@WorkContext.ImageCDN}/images/btn_unfold.gif" style="padding-top:10px;padding-right:6px;cursor:pointer;">
+                </span>
+                <a @str href="@Url.Action("BrandList", new RouteValueDictionary { { "cateId", cate.CateId } })" class="f_l">@cate.Name</a>
+               </h1>
+                </div>
+           }
+           </div>
+		<div style="clear:both"></div>
+	</dl>  
+</div>  
+
+<div class="blank"></div>
+  </div>
+
+<div id="listR">
+<div class="brandList">
+
+<ul>
+    @foreach (BrandInfo info in Model.BrandList)
+    {
+        <li>
+            <a href="@Url.Action("category", new RouteValueDictionary { { "cateId", Model.CateId }, { "brandId", info.BrandId },{ "page", 1 } })"><img src="@{@WorkContext.ImageCDN}/upload/brand/thumb100_100/@info.Logo" onerror="nofindimg();" width="165px" height="165px" /></a>
+        </li>
+    }
+    <div class="clear"></div>
+</ul>
+
+</div>
+
+</div>
+</div>
+

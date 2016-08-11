@@ -1,0 +1,25 @@
+﻿@model BrnMall.Web.Models.PayResultModel
+@{
+    Layout = "~/Views/Shared/_layout.cshtml";
+    ViewBag.Title = "订单提交结果-" + WorkContext.MallConfig.SiteTitle;
+}
+@section headerSection{
+    <link href="@{@WorkContext.CSSCDN}/css/base.css" rel="stylesheet" type="text/css" />
+    <link href="@{@WorkContext.CSSCDN}/css/content.css" rel="stylesheet" type="text/css" />
+    }
+
+<div class="box">
+    <div style=" text-align:center; margin-left:auto; margin-right:auto; margin-top:80px; margin-bottom:20px; width:100%;">
+    @if (Model.State == 0)
+    {
+        <a style=" font-size:x-large!important; color:red; font-weight:bold;">支付失败！ </a>
+    }
+    else
+    {
+        <a style=" font-size:x-large!important; color:#00AA00; font-weight:bold;">支付成功！ </a>
+    }
+    <div class=" clear" style="height:20px;"></div>
+    <a href="@Url.Action("OrderList","Ucenter")">回到我的订单看看...</a>
+    <a href=""></a>
+    </div>
+</div>

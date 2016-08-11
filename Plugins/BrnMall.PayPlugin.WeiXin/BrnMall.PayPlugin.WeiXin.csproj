@@ -1,0 +1,123 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{7D8456B8-4CF9-4349-88C5-AD1ADB919380}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>BrnMall.PayPlugin.WeiXin</RootNamespace>
+    <AssemblyName>BrnMall.PayPlugin.WeiXin</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\Presentation\BrnMall.Web\plugins\BrnMall.PayPlugin.WeiXin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="LitJson, Version=0.7.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Presentation\BrnMall.Web\bin\LitJson.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="ThoughtWorks.QRCode">
+      <HintPath>..\..\Presentation\BrnMall.Web\lib\ThoughtWorks.QRCode.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="codes\NativePay.cs" />
+    <Compile Include="codes\ResultNotify.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="codes\JsApiPay.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="codes\PluginService.cs" />
+    <Compile Include="codes\PluginUtils.cs" />
+    <Compile Include="codes\weixinpay\Data.cs" />
+    <Compile Include="codes\weixinpay\Exception.cs" />
+    <Compile Include="codes\weixinpay\HttpService.cs" />
+    <Compile Include="codes\weixinpay\Log.cs" />
+    <Compile Include="codes\weixinpay\Notify.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="codes\weixinpay\WxPayApi.cs" />
+    <Compile Include="codes\weixinpay\WxPayConfig.cs" />
+    <Compile Include="codes\WeiXin.cs" />
+    <Compile Include="controllers\AdminWeiXinController.cs" />
+    <Compile Include="controllers\WeiXinController.cs" />
+    <Compile Include="models\ConfigModel.cs" />
+    <Compile Include="models\PayShowModel.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="db.config" />
+    <None Include="plugin.config" />
+    <None Include="views\adminweixin\config.cshtml" />
+    <Content Include="views\shared\_layout.cshtml" />
+    <None Include="views\show.cshtml" />
+    <None Include="views\weixin\nativepay.cshtml" />
+    <None Include="views\weixin\pay.cshtml" />
+    <None Include="Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="jsycert\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Libraries\BrnMall.Core\BrnMall.Core.csproj">
+      <Project>{6B8E6156-1BD0-49E4-A693-A3F88025CF4C}</Project>
+      <Name>BrnMall.Core</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\BrnMall.Services\BrnMall.Services.csproj">
+      <Project>{1323CA44-E7C4-47B1-A316-22E80777D885}</Project>
+      <Name>BrnMall.Services</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Presentation\BrnMall.Web.Framework\BrnMall.Web.Framework.csproj">
+      <Project>{C28BA0E8-6095-4F37-8CAF-A014CBD43CB9}</Project>
+      <Name>BrnMall.Web.Framework</Name>
+      <Private>False</Private>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

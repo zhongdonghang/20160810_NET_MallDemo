@@ -1,0 +1,17 @@
+﻿@model BrnMall.Web.Mobile.Models.ResetPwdModel
+@{
+    Layout = "~/mobile/Views/Shared/_layout.cshtml";
+    ViewBag.Title = "重置密码";
+}
+@section headerSection{
+    <link href="@{@WorkContext.CSSCDN}/mobile/css/account.css" rel="stylesheet" type="text/css">
+    <script src="@{@WorkContext.ScriptCDN}/mobile/scripts/account.js?v=1" type="text/javascript"></script>
+}
+<div class="loginTable">
+  <form name="resetPwdForm" action="">
+    <div class="itmeC"><input type="password" class="text" name="password" placeholder="新密码" /></div>
+    <div class="itmeC"><input type="password" class="text" name="confirmPwd" placeholder="确认密码" /></div>
+    <div id="error_tip" style=" width:100%; color:Red;display:none"></div>
+    <div class="itmeC"><a href="javascript:resetPwd('@Model.V')" class="redBt" style="display:block; padding:0; height:38px; width:99%; text-align:center; line-height:38px;">重置</a></div>
+  </form>
+</div>

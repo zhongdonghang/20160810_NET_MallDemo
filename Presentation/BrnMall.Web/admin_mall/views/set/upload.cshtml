@@ -1,0 +1,92 @@
+﻿@model BrnMall.Web.MallAdmin.Models.UploadModel
+
+@section header{
+    <title>上传设置</title>
+    <link type="text/css" rel="stylesheet" href="/admin_mall/content/css/site.css"/>
+    <script type="text/javascript" src="/admin_mall/scripts/jquery.js"></script>
+    <script type="text/javascript" src="/admin_mall/scripts/jquery.validate.js"></script>
+    <script type="text/javascript" src="/admin_mall/scripts/jquery.validate.unobtrusive.js"></script>
+    <script type="text/javascript">
+            $(function () {
+                if ($("input:radio[name='WatermarkType']:checked").val() == "1") {
+                    $(".watermark").show();
+                    $(".image").hide();
+                }
+                else if ($("input:radio[name='WatermarkType']:checked").val() == "2") {
+                    $(".watermark").show();
+                    $(".text").hide();
+                }
+                else{
+                    $(".watermark").hide();
+                }
+
+                $("input:radio[name='WatermarkType']").click(function () {
+                    if ($(this).val() == "1") {
+                        $(".watermark").show();
+                        $(".image").hide();
+                    }
+                    else if ($(this).val() == "2") {
+                        $(".watermark").show();
+                        $(".text").hide();
+                    }
+                    else {
+                        $(".watermark").hide();
+                    }
+                })
+            })
+    </script>
+}
+
+@section body{
+<h1 class="rightH1">
+系统设置 &gt;&gt; 上传设置
+<div class="right">
+<div class="clear"></div>
+</div>
+<div class="clear"></div>
+</h1>
+
+@using (Html.BeginForm())
+{
+<div class="addTable">
+<table width="100%">
+    <tr>
+    <td  width="146px" align="right">上传服务器：</td>
+    <td>@Html.TextBoxFor(x => x.UploadServer, new { @class = "input", size = "35" }) 如果上传到本机请留空</td>
+    </tr>
+
+         <tr>
+    <td align="right">允许上传的类型：</td>
+    <td>
+    @Html.TextBoxFor(x => x.UploadImgType, new { @class = "input", size = "80" })如果有多个值用","分割 @Html.ValidationMessageFor(x => x.UploadImgType)
+    </td>
+    </tr>
+
+  <tr>
+    <td align="right">最大图片：</td>
+    <td>
+    @Html.TextBoxFor(x => x.UploadImgSize, new { @class = "input", size = "35" })单位为兆（M） @Html.ValidationMessageFor(x => x.UploadImgSize)
+    </td>
+    </tr>
+    <tr>
+    <td align="right">&nbsp;</td>
+    <td>
+    <a href="" class="addBt" id="sumbitBut" ><img src="/admin_mall/content/images/submit.jpg" /></a>
+            <script type="text/javascript">
+                $(function () {
+                    $("#sumbitBut").click(function () {
+                        $("form:first").submit();
+                        return false;
+                    })
+                });
+        </script>
+    </td>
+    </tr>
+  <tr>
+    <td align="right">&nbsp;</td>
+    <td>&nbsp;</td>
+    </tr>
+</table>
+</div>
+}
+}

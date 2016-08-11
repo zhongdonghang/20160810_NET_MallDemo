@@ -1,0 +1,116 @@
+﻿@model BrnMall.Web.Mobile.Models.SafeUpdateModel
+@{
+    Layout = "~/mobile/Views/Shared/_layout.cshtml";
+    ViewBag.Title = "账户安全";
+}
+@section headerSection{
+    <link href="@{@WorkContext.CSSCDN}/mobile/css/ucenter.css" rel="stylesheet" type="text/css">
+    <script src="@{@WorkContext.ScriptCDN}/mobile/scripts/ucenter.safe.js?v=1" type="text/javascript"></script>
+    <script type="text/javascript" src="/admin_mall/scripts/jquery.js"></script>
+    <script type="text/javascript" src="/admin_mall/scripts/jquery.validate.js"></script>
+    <script type="text/javascript" src="/admin_mall/scripts/jquery.validate.unobtrusive.js"></script>
+         <script type="text/javascript">
+        function startTimer(totalTime){
+        var itv= null;
+        itv= setInterval(function(){
+            totalTime--;
+            $('#btnGetPhone').val("倒计时"+totalTime);
+            if( totalTime<=0 ) {
+                clearInterval(itv); itv= null;
+                $('#btnGetPhone').removeAttr("disabled");
+                $('#btnGetPhone').val("再次发送");
+            }
+        }, 1000);
+    }
+    $(function () {
+        $("#btnGetPhone").click(function () {
+            var phone = $('#phonenum').val();
+            if (!phone) {
+                alert("请输入手机号");
+                return false;
+            }
+            var url = "@Url.Action("GetPhoneVerifyCode", "Account")";
+            $.post(url, { phoneNumber: phone,type:2 },
+                function (data) {
+                    if (data == "succ") {
+                        $('#btnGetPhone').attr("disabled","disabled");
+                        startTimer(60);
+                        $('#btnGetPhone').val("发送成功，再次发送");
+                    }
+                    else if (data == "failed") {
+                        $('#btnGetPhone').attr("disabled", "disabled");
+                        $('#btnGetPhone').val("发送不成功，再次发送");
+                        startTimer(1);
+                    }
+                    else {
+                        alert(data);
+                        $('#btnGetPhone').attr("disabled", "disabled");
+                        startTimer(0);
+                    }
+                }, null);
+        });
+    });
+    </script>
+}
+<div class="userForm">
+
+<div class="userFormT">
+<ul>
+<li class="T1"><span>1</span></li>
+<li class="Tline"><strong></strong></li>
+<li class="T2"><span class="hot">2</span></li>
+<li class="Tline"><strong></strong></li>
+<li class="T2"><span>3</span></li>
+</ul>
+</div>
+
+<div class="userFormT" style="padding:0 20px;">
+<ul>
+<li style="width:96px;">身份验证</li>
+<li style="width:96px;text-align:center;">修改安全信息</li>
+<li style="width:96px; text-align:right;">修改成功</li>
+</ul>
+</div>
+
+<div class="userFormC">
+@if (Model.Action == "updatepassword")
+{
+    <form name="updatePasswordForm" action="">
+        <input type="hidden" name="v" value="@Model.V"/>
+        <div class="con"><input type="password" name="password" class="text" placeholder="新密码" /></div>
+        <div class="con"><input type="password" name="confirmPwd" class="text" placeholder="确认密码" /></div>
+        <div class="con"><input type="text" name="verifyCode" class="text" style="width:65%; float:left;" placeholder="请输入图片验证码" /><img onclick="this.src='/mob/tool/verifyimage?time=' + new Date()" src="/mob/tool/verifyimage" style="width:30%; float:right; height:35px;" /><div class="clear"></div></div>
+        <div id="error_tip" style=" width:100%; color:Red; display:none"></div>
+        <div class="con"><a href="javascript:updatePassword()" class="redBt formSub">提交</a></div>
+    </form>
+}
+else if (Model.Action == "updatepaypassword")
+{
+    <form name="updatePayPasswordForm" action="">
+        <input type="hidden" name="v" value="@Model.V"/>
+        <div class="con"><input type="password" name="paypassword" class="text" placeholder="新支付密码" /></div>
+        <div class="con"><input type="password" name="payconfirmPwd" class="text" placeholder="确认密码" /></div>
+        <div class="con"><input type="text" name="payverifyCode" class="text" style="width:65%; float:left;" placeholder="请输入图片验证码" /><img onclick="this.src='/mob/tool/verifyimage?time=' + new Date()" src="/mob/tool/verifyimage" style="width:30%; float:right; height:35px;" /><div class="clear"></div></div>
+        <div id="error_tip" style=" width:100%; color:Red; display:none"></div>
+        <div class="con"><a href="javascript:updatePayPassword()" class="redBt formSub">提交</a></div>
+    </form>
+}
+else if (Model.Action == "updatemobile")
+{
+    <form name="updateMobileForm" action="">
+        <input type="hidden" name="v" value="@Model.V"/>
+        <div class="con">
+        <input type="text" id="phonenum" name="mobile" class="text" placeholder="新手机号" style="width:60%; float:left;" />
+        <input type="button" id="btnGetPhone" class="redBt" style="width:35%; float:right; height:35px;" value="获取短信验证码" />
+        </div>
+         <br /><br />
+        <div class="con"><input type="text" name="moibleCode" class="text" style="width:60%; float:left;" placeholder="手机校验码" /></div>
+        <br /><br />
+        <div class="con"><input type="text" name="verifyCode" class="text" style="width:60%; float:left;" placeholder="请输入图片验证码" /><img onclick="this.src='/mob/tool/verifyimage?time=' + new Date()" src="/mob/tool/verifyimage" style="width:30%; float:right; height:35px;" /><div class="clear"></div></div>
+        <div id="error_tip" style=" width:100%; color:Red; display:none"></div>
+        <div class="con"><a href="javascript:updateMobile()" class="redBt formSub">提交</a></div>
+    </form>
+}
+</div>
+
+</div>

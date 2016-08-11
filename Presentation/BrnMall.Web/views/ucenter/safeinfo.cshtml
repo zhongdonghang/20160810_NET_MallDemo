@@ -1,0 +1,73 @@
+﻿@model BrnMall.Core.PartUserInfo
+@{
+    Layout = "~/Views/Shared/_layout.cshtml";
+    ViewBag.Title = "账户安全-" + WorkContext.MallConfig.SiteTitle;
+    bool haspaypassword = Users.GetUserPayPasswordByUid(WorkContext.Uid) == null ? false : true;
+}
+@section headerSection{
+    <link href="@{@WorkContext.CSSCDN}/css/base.css" rel="stylesheet" type="text/css" />
+    <link href="@{@WorkContext.CSSCDN}/css/ucenter.css" rel="stylesheet" type="text/css" />
+    }
+
+<div class="bigBox" id="member">
+<div class="box">
+<div id="memberL">
+<h2>个人中心</h2>
+<ul id="memberNav">
+    <li><a href="@Url.Action("userinfo")"><s>&gt;</s>账户信息</a></li>
+    <li><a href="@Url.Action("safeinfo")" class="hot"><s>&gt;</s>账户安全</a></li>
+    <li><a href="@Url.Action("orderlist")"><s>&gt;</s>我的订单</a></li>
+    <li><a href="@Url.Action("shipaddresslist")"><s>&gt;</s>收货地址</a></li>
+    <li><a href="@Url.Action("favoriteproductlist")"><s>&gt;</s>收藏商品</a></li>
+    <li><a href="@Url.Action("favoritestorelist")"><s>&gt;</s>收藏店铺</a></li>
+    <li><a href="@Url.Action("paycreditloglist")"><s>&gt;</s>我的资产</a></li>
+    @*<li><a href="@Url.Action("couponlist")"><s>&gt;</s>优惠劵</a></li>*@
+    <li><a href="@Url.Action("introducers")"><s>&gt;</s>介绍关系</a></li>
+    <li><a href="@Url.Action("productconsultlist")"><s>&gt;</s>购买咨询</a></li>
+    <li><a href="@Url.Action("productreviewlist")"><s>&gt;</s>商品评价</a></li>
+  @*  @if (WorkContext.PartUserInfo.StoreId < 2 || (WorkContext.StoreInfo != null && (WorkContext.StoreInfo.State == (int)StoreState.Applying || WorkContext.StoreInfo.State == (int)StoreState.ApplyFail)))
+    {
+    <li><a href="@Url.Action("storeapplystep1")"><s>&gt;</s>申请开店</a></li>
+    }*@
+</ul>
+
+</div>
+<div id="memberR">
+    <h2 id="memberRT">账户安全</h2>
+
+    <div class="safe">
+        <s class="ico1"></s>
+        <b>登录密码</b>
+        <p></p>
+        <a href="@Url.Action("safeverify", new RouteValueDictionary { { "act", "updatePassword" } })" class="greenBT">修改</a>
+        <div class="clear"></div>
+    </div>
+
+      <div class="safe">
+        <s class="@(haspaypassword ? "ico1" : "ico2")"></s>
+        <b>支付密码</b>
+        <p>@(haspaypassword ? "" : "您还未设置支付密码，请设置")</p>
+        <a href="@Url.Action("safeverify", new RouteValueDictionary { { "act", "updatePayPassword" } })" class="greenBT">@(haspaypassword ? "修改" : "设置")</a>
+        <div class="clear"></div>
+    </div>
+
+    <div class="safe">
+        <s class="ico1"></s>
+        <b>手机修改</b> 
+        <p>您验证的手机：<strong>@Html.Raw(CommonHelper.HideMobile(Model.UserName))</strong> 若已丢失或停用，请立即更换，<span style="color:#cc0000;">避免账户被盗</span></p> 
+        <a href="@Url.Action("safeverify", new RouteValueDictionary { { "act", "updateMobile" },{"mode","password"} })" class="greenBT">更换</a>
+        <div class="clear"></div>
+    </div>
+
+    <div class="safeInfo">
+        <h2>安全服务提示</h2>
+        <p>1.确认您登录的是精生缘实销电子商城网址<a href="@WorkContext.MallConfig.SiteUrl">@WorkContext.MallConfig.SiteUrl</a>，注意防范进入钓鱼网站，不要轻信各种即时通讯工具发送的商品或支付链接，谨防网购诈骗。 </p>
+        <p>2.建议您安装杀毒软件，并定期更新操作系统等软件补丁，确保账户及交易安全。 </p>
+    </div>
+
+</div>
+
+<div class="clear"></div>
+</div>
+<div class="clear"></div>
+</div>

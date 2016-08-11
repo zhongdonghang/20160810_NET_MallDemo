@@ -1,0 +1,99 @@
+﻿@model BrnMall.Web.Models.LoginModel
+@{
+    Layout = "~/Views/Shared/_layout.cshtml";
+    ViewBag.Title = "用户登录-" + WorkContext.MallConfig.SiteTitle;
+}
+@section headerSection{
+    <link href="@{@WorkContext.CSSCDN}/css/base.css" rel="stylesheet" type="text/css" />
+    <script src="@{@WorkContext.ScriptCDN}/scripts/account.js?v=1" type="text/javascript"></script>
+    <script src="@{@WorkContext.ScriptCDN}/scripts/user.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        returnUrl = "@Model.ReturnUrl";
+        shadowName = "@Model.ShadowName";
+    </script>
+}
+<div class="block block1">
+    <div class="block box">
+        <div class="blank">
+        </div>
+        <div id="ur_here">
+            当前位置: <a>用户中心</a> <code>&gt;</code> 登录
+        </div>
+    </div>
+    <div class="blank">
+    </div>
+    <div class="usBox clearfix">
+        <div class="usBox_1 f_l">
+            <div class="login_tab">
+                <ul>
+                    <li class="active"><a href="@Url.Action("register")"">用户登录</a></li>
+                    <li><a href="@Url.Action("register")">用户注册</a></li>
+                </ul>
+            </div>
+            <form name="loginForm">
+            <table width="100%" border="0" align="left" cellpadding="3" cellspacing="5" style="border-collapse:separate;border-spacing:15px;">
+                <tbody>
+                    <tr>
+                        <td width="20%" align="right" style=" font-size:larger">
+                            用户名&nbsp;&nbsp;&nbsp;
+                        </td>
+                        <td width="70%">
+                            <input name="@Model.ShadowName" type="text" size="25" class="inputBg">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right" style="font-size:larger">
+                            密码&nbsp;&nbsp;&nbsp;
+                        </td>
+                        <td>
+                            <input name="password" type="password" size="15" class="inputBg">
+                        </td>
+                    </tr>
+                    @if (Model.IsVerifyCode)
+                    { 
+                     <tr>
+                        <td align="right" style="font-size:larger">
+                            验证码&nbsp;&nbsp;&nbsp;
+                        </td>
+                        <td>
+                            <input type="text" name="verifyCode" autocomplete="off" class="inputBg" style="float:left;" />
+                                &nbsp;&nbsp;<img id="verifyImage" style="cursor: hand" title="点击刷新验证码" onclick="this.src='/tool/verifyimage?time=' + new Date()"
+                                    src="/tool/verifyimage" height="34" class="left" />
+                        </td>
+                    </tr>
+                    }
+                   
+                    <tr>
+                    <td>
+                    </td>
+                    <td>
+                          <label><input name="isRemember" type="checkbox" style="vertical-align:-2px; margin-right:3px;" value="1" />记住密码</label> &nbsp; &nbsp;  &nbsp; &nbsp;  &nbsp; &nbsp;  &nbsp; &nbsp; 
+                           <a href="@Url.Action("findpwd")">忘记密码?</a>
+                    </td>
+                    </tr>
+                    <tr>
+                    <td>
+                    </td>
+                    <td>
+                        <input type="button" name="submit" value="" onclick="login()" class="us_Submit"/>
+                        <div id="error_tip" style=" width:100%; color:Red; display:none"></div>
+                    </td>
+                    </tr>
+                  
+                </tbody>
+            </table>
+            </form>
+            <div class="blank">
+            </div>
+        </div>
+        <div class="usTxt">
+            @{
+                List<AdvertInfo> loginAdvertList = Adverts.GetAdvertList(7);
+            }
+            <a href="@loginAdvertList[0].Url" title="" target="_blank">
+            <img src="@{@WorkContext.ImageCDN}/upload/advert/@loginAdvertList[0].Body" style="width:370px;height:330px" class="left" /></a>
+        </div>
+    </div>
+</div>
+<div class="blank">
+</div>

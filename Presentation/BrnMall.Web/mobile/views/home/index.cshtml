@@ -1,0 +1,560 @@
+﻿@{
+    Layout = null;
+}
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>
+        @{@WorkContext.MallConfig.SiteTitle}
+    </title>
+    @Html.Raw(WorkContext.MallConfig.SEOKeyword)
+    @Html.Raw(WorkContext.MallConfig.SEODescription)
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="stylesheet" type="text/css" href="@{@WorkContext.CSSCDN}/mobile/css/menu-style.css?v=1" charset="gbk"/>
+    <link rel="stylesheet" type="text/css" href="@{@WorkContext.CSSCDN}/mobile/css/base2013.css" charset="gbk"/>
+    <link rel="stylesheet" type="text/css" href="@{@WorkContext.CSSCDN}/mobile/css/2013/index/index.css?v=2" charset="gbk"/>
+    <script src="@{@WorkContext.ScriptCDN}/mobile/scripts/common.js" type="text/javascript"></script>
+    <script src="@{@WorkContext.ScriptCDN}/mobile/scripts/utils.js" type="text/javascript"></script>
+    <script src="@{@WorkContext.ScriptCDN}/mobile/scripts/jquery-1.11.0.min.js"></script>
+    <script src="@{@WorkContext.ScriptCDN}/mobile/scripts/product.js" type="text/javascript"></script>
+    <script src="@{@WorkContext.ScriptCDN}/mobile/scripts/nav4.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        uid = @WorkContext.Uid;
+        isGuestSC = @WorkContext.MallConfig.IsGuestSC;
+    </script>
+    <script type="text/javascript">
+        var _winLocation = window.location.href; //获得当前页面的路径，根据路径规则进行逐页替换
+        var _isWebKit = '__proto__' in {}; //是否是webkit内核
+        if (_isWebKit) {//如果是webkit内核，则分模块使用zepto
+            //要使用zeptojs的路径列表，可以做为分模块替换的开关
+            var _locationList = new Array();
+            _locationList.push('products/');
+            _locationList.push('order/'); //订单
+            var _needReplace = false;
+            //如果当前路径符合要使用的路径规则，则进行替换
+            for (var i = 0; i < _locationList.length; i++) {
+                if (_winLocation.indexOf(_locationList[i]) != -1) {
+                    _needReplace = true;
+                    break;
+                }
+            }
+            //如果是首页的话，则使用zepto
+            var _tmp = _winLocation.replace(/(^http:\/\/)|(\/*$)/g, '');
+            if (_tmp.indexOf('/') < 0 || (_tmp.split('/').length <= 2 && _tmp.indexOf('/index') >= 0)) {
+                _needReplace = true;
+            }
+            //如果是商品详情页的话，则使用zepto
+            var _dlocationList = new Array();
+            _dlocationList.push(/\/product\/([0-9]+)\.html/);
+            _dlocationList.push(/\/orderComment\/([0-9]+)\.html/);
+            _dlocationList.push(/\/consultations\/([0-9]+)\.html/);
+            _dlocationList.push(/\/consultations\/([0-9]+)-([0-9]+)\.html/);
+            _dlocationList.push(/\/comments\/([0-9]+)\.html/);
+            for (var i = 0, len = _dlocationList.length; i < len; i++) {
+                if (_dlocationList[i].test(_winLocation)) {
+                    _needReplace = true;
+                    break;
+                }
+            }
+            if (_needReplace) {
+                document.write('<script src="@{@WorkContext.ScriptCDN}/mobile/scripts/zepto.min.js"><\/script>');
+                document.write('<script type="text/javascript">window.jQuery=window.Zepto;<\/script>');
+            } else {
+                document.write('<script src="@{@WorkContext.ScriptCDN}/mobile/scripts/jquery-1.6.2.min.js"><\/script>');
+            }
+        } else {//如果是非webkit内核直接使用jquery
+            document.write('<script src="@{@WorkContext.ScriptCDN}/mobile/scripts/jquery-1.6.2.min.js"><\/script>');
+        }
+    </script>
+    <script type="text/javascript" src="@{@WorkContext.ScriptCDN}/mobile/scripts/html5/common.js"></script>
+    <script type="text/javascript" src="@{@WorkContext.ScriptCDN}/mobile/scripts/html5/spin.min.js"></script>
+</head>
+<body id="body" style=" width:100%">
+    <a name="top"></a>
+    <script type="text/javascript" src="@{@WorkContext.ScriptCDN}/mobile/scripts/2013/index/index.js"></script>
+    <script type="text/javascript">        $('body').css('background', '#d5d5d6'); $(function () { $('.new-footer').css('margin-top', '0px'); })</script>
+    <div class="download-con" id="down_app" style="display: none;">
+        <div class="down_app">
+            <div class="download-logo">
+            </div>
+            <div class="alogo">
+                <p class="client-name">
+                    商城客户端</p>
+                <p class="client-logon">
+                    多 ● 快 ● 好 ● 省</p>
+            </div>
+            <div class="open_now">
+                <a id="openJD" href="#"><span class="open_btn">立即打开</span></a>
+            </div>
+            <div class="close-btn-con close-btn">
+                <span class="close-btn-icon"></span>
+            </div>
+        </div>
+    </div>
+    <div class="new-ct main">
+         <div class="logo">
+            <img src="@{@WorkContext.ImageCDN}/mobile/images/logo.png" alt="logo">
+        </div>
+        <div class="search" style="position: relative">
+            <span class="input-box">
+                <form action="@Url.Action("Search", "Catalog")"> 
+                <input name="keyword" type="text" id="keyword" class="new-input" required value=""/>
+                </form>
+                <a href="javascript:mallSearch(document.getElementById('keyword').value)" class="btn-search">
+                    <span>search</span></a> 
+            </span>
+
+            <div class="new-srch-lst" id="shelper" style="position: absolute; top: 2em; left: 3.28em;
+                display: none; width: 201px; z-index: 10">
+            </div>
+        </div>
+        <div class="banner scroll-wrapper" id="idContainer2" ontouchstart="touchStart(event)"
+            ontouchmove="touchMove(event);" ontouchend="touchEnd(event);">
+            @{
+                List<AdvertInfo> bannerAdvertList = Adverts.GetAdvertList(2);
+                var strwidth = bannerAdvertList.Count.ToString() + "00%";
+            }
+            <ul class="scroller" style="position:relative;left:0px;width:@strwidth" id="idSlider2">
+                @foreach (var advert in bannerAdvertList)
+                {
+                    string url = advert.Url.Length > 3 ? advert.Url : Url.Action("product", "catalog", new RouteValueDictionary { { "pid", TypeHelper.StringToInt(advert.ExtField5) } }); 
+                    <li style="width: -100.0%"><a href='@url'>
+                        <img src="@{@WorkContext.ImageCDN}/upload/advert/@advert.Body" border="0" alt="@advert.ExtField1"/>
+                    </a></li> 
+                }
+            </ul>
+            <ul class="new-banner-num new-tbl-type" id="idNum">
+            </ul>
+        </div>
+
+
+        <div class="category">
+    	<ul class="cate-menu tbl-type" id="categoryMenu">
+         @{
+                List<AdvertInfo> kewordAdvertList = Adverts.GetAdvertList(3);
+            }
+             @foreach (var advert in kewordAdvertList)
+            {
+                string url = advert.Url.Length > 3 ? advert.Url : Url.Action("search", "catalog", new RouteValueDictionary { { "keyword", advert.ExtField1 } });
+             <li class="tbl-cell route5 route">
+        	<a href="@url" class="menu6" onclick="clickResponse(this)" res="1">
+            	<span class="menu6-icon"><span><img src="@{@WorkContext.ImageCDN}/upload/advert/@advert.Body"></span></span>
+                <span class="cate-name">@advert.ExtField1</span>
+            </a>
+        </li>
+            }
+
+        </ul>
+        </div>
+       <div class="clear" style=" height:14px;"></div>
+    <div class="ad2 ad2-v1">
+            <h2 class="ad-h2" style="border-bottom: 4px solid #24cab4;">保健品<a href="@Url.Action("category", "catalog", new { cateid = 75 })">更多...</a></h2>
+            @{
+                List<AdvertInfo> floor1AdvertList = Adverts.GetAdvertList(34);
+                foreach (var advert in floor1AdvertList)
+                {
+                 string url = advert.Url.Length > 3 ? advert.Url : Url.Action("product", "catalog", new RouteValueDictionary { { "pid", TypeHelper.StringToInt(advert.ExtField5) } });
+                <div class="shangpin">
+                    <span style="border: 1px solid #F33; border-radius: 3px; color: #f33; padding: 2px;">
+                        推荐</span>
+                    <li><a href="@url" style="margin-right:10%; width:40%; float:left; height:auto;">
+                        <img src="@{@WorkContext.ImageCDN}/upload/advert/@advert.Body" onerror="nofindimg();"></a><a href="@url">@advert.ExtField1</a>
+                    </li>
+                    <div class="buy">
+                        <em>商城价：@advert.ExtField2 元</em>
+                        <h6>
+                            市场价：@advert.ExtField3 元</h6>
+                        <span style="background: #F60; left: 72.333333%"><a href="javascript:addProductToCart(@advert.ExtField5, 1,0)">
+                            加入购物车</a></span></div>
+                    <div id="clear">
+                    </div>
+                </div>
+                }
+            }
+            <div id="clear">
+            </div>
+        </div>
+        <div class="ad2 ad2-v1">
+            <h2 class="ad-h2" style="border-bottom: 4px solid #fc215e;">保健食品<a href="@Url.Action("category", "catalog", new { cateid = 76 })">更多...</a></h2>
+            @{List<AdvertInfo> floor2AdvertList = Adverts.GetAdvertList(35);
+
+              foreach (var advert in floor2AdvertList)
+              {
+                 string url = advert.Url.Length > 3 ? advert.Url : Url.Action("product", "catalog", new RouteValueDictionary { { "pid", TypeHelper.StringToInt(advert.ExtField5) } });
+                <div class="shangpin">
+                    <span style="border: 1px solid #F33; border-radius: 3px; color: #f33; padding: 2px;">
+                        推荐</span>
+                    <li><a href="@url" style="margin-right:10%; width:40%; float:left; height:auto;">
+                        <img src="@{@WorkContext.ImageCDN}/upload/advert/@advert.Body" onerror="nofindimg();"></a><a href="@url">@advert.ExtField1</a>
+                    </li>
+                    <div class="buy">
+                        <em>商城价：@advert.ExtField2 元</em>
+                        <h6>
+                            市场价：@advert.ExtField3 元</h6>
+                        <span style="background: #F60; left: 72.333333%"><a href="javascript:addProductToCart(@advert.ExtField5, 1,0)">
+                            加入购物车</a></span></div>
+                    <div id="clear">
+                    </div>
+                </div>
+              }
+            }
+            <div id="clear">
+            </div>
+        </div>
+        <div class="ad2">
+          <h2 class="ad-h2" style="border-bottom: 4px solid #55bbee;">保健器材<a href="@Url.Action("category", "catalog", new { cateid = 113 })">更多...</a></h2>
+            @{List<AdvertInfo> floor3AdvertList = Adverts.GetAdvertList(36);
+              foreach (var advert in floor3AdvertList)
+              {
+                 string url = advert.Url.Length > 3 ? advert.Url : Url.Action("product", "catalog", new RouteValueDictionary { { "pid", TypeHelper.StringToInt(advert.ExtField5) } });
+                <div class="shangpin">
+                    <span style="border: 1px solid #F33; border-radius: 3px; color: #f33; padding: 2px;">
+                        推荐</span>
+                    <li><a href="@url" style="margin-right:10%; width:40%; float:left; height:auto;">
+                        <img src="@{@WorkContext.ImageCDN}/upload/advert/@advert.Body" onerror="nofindimg();"></a><a href="@url">@advert.ExtField1</a>
+                    </li>
+                    <div class="buy">
+                        <em>商城价：@advert.ExtField2 元</em>
+                        <h6>
+                            市场价：@advert.ExtField3 元</h6>
+                        <span style="background: #F60; left: 72.333333%"><a href="javascript:addProductToCart(@advert.ExtField5, 1,0)">
+                            加入购物车</a></span></div>
+                    <div id="clear">
+                    </div>
+                </div>
+              }
+            }
+            <div id="clear">
+            </div>
+        </div>
+        <div class="ad2 ad2-v1">
+           <h2 class="ad-h2" style="border-bottom: 4px solid #f59916;">化妆品<a href="@Url.Action("category", "catalog", new { cateid = 107 })">更多...</a></h2>
+            @{List<AdvertInfo> floor4AdvertList = Adverts.GetAdvertList(37);
+              foreach (var advert in floor4AdvertList)
+              {
+                 string url = advert.Url.Length > 3 ? advert.Url : Url.Action("product", "catalog", new RouteValueDictionary { { "pid", TypeHelper.StringToInt(advert.ExtField5) } });
+                <div class="shangpin">
+                    <span style="border: 1px solid #F33; border-radius: 3px; color: #f33; padding: 2px;">
+                        推荐</span>
+                    <li><a href="@url" style="margin-right:10%; width:40%; float:left; height:auto;">
+                        <img src="@{@WorkContext.ImageCDN}/upload/advert/@advert.Body" onerror="nofindimg();"></a><a href="@url">@advert.ExtField1</a>
+                    </li>
+                    <div class="buy">
+                        <em>商城价：@advert.ExtField2 元</em>
+                        <h6>
+                            市场价：@advert.ExtField3 元</h6>
+                        <span style="background: #F60; left: 72.333333%"><a href="javascript:addProductToCart(@advert.ExtField5, 1,0)">
+                            加入购物车</a></span></div>
+                    <div id="clear">
+                    </div>
+                </div>
+              }
+            }
+            <div id="clear">
+            </div>
+        </div>
+        <div class="ad2 ad2-v1">
+        <h2 class="ad-h2" style="border-bottom: 4px solid #8888ee;">洗护用品<a href="@Url.Action("category", "catalog", new { cateid = 78 })">更多...</a></h2>
+            @{List<AdvertInfo> floor5AdvertList = Adverts.GetAdvertList(38);
+
+              foreach (var advert in floor5AdvertList)
+              {
+                 string url = advert.Url.Length > 3 ? advert.Url : Url.Action("product", "catalog", new RouteValueDictionary { { "pid", TypeHelper.StringToInt(advert.ExtField5) } });
+                <div class="shangpin">
+                    <span style="border: 1px solid #F33; border-radius: 3px; color: #f33; padding: 2px;">
+                        推荐</span>
+                    <li><a href="@url" style="margin-right:10%; width:40%; float:left; height:auto;">
+                        <img src="@{@WorkContext.ImageCDN}/upload/advert/@advert.Body" onerror="nofindimg();"></a><a href="@url">@advert.ExtField1</a>
+                    </li>
+                    <div class="buy">
+                        <em>商城价：@advert.ExtField2 元</em>
+                        <h6>
+                            市场价：@advert.ExtField3 元</h6>
+                        <span style="background: #F60; left: 72.333333%"><a href="javascript:addProductToCart(@advert.ExtField5, 1,0)">
+                            加入购物车</a></span></div>
+                    <div id="clear">
+                    </div>
+                </div>
+              }
+            }
+            <div id="clear">
+            </div>
+        </div>
+        <div class="ad2 ad2-v1">
+           <h2 class="ad-h2" style="border-bottom: 4px solid #77bb30;">情趣用品<a href="@Url.Action("category", "catalog", new { cateid = 131 })">更多...</a></h2>
+            @{List<AdvertInfo> floor6AdvertList = Adverts.GetAdvertList(33);
+
+              foreach (var advert in floor6AdvertList)
+              {
+                 string url = advert.Url.Length > 3 ? advert.Url : Url.Action("product", "catalog", new RouteValueDictionary { { "pid", TypeHelper.StringToInt(advert.ExtField5) } });
+                <div class="shangpin">
+                    <span style="border: 1px solid #F33; border-radius: 3px; color: #f33; padding: 2px;">
+                        推荐</span>
+                    <li><a href="@url" style="margin-right:10%; width:40%; float:left; height:auto;">
+                        <img src="@{@WorkContext.ImageCDN}/upload/advert/@advert.Body" onerror="nofindimg();"></a><a href="@url">@advert.ExtField1</a>
+                    </li>
+                    <div class="buy">
+                        <em>商城价：@advert.ExtField2 元</em>
+                        <h6>
+                            市场价：@advert.ExtField3 元</h6>
+                        <span style="background: #F60; left: 72.333333%"><a href="javascript:addProductToCart(@advert.ExtField5, 1,0)">
+                            加入购物车</a></span></div>
+                    <div id="clear">
+                    </div>
+                </div>
+              }
+            }
+            <div id="clear">
+            </div>
+        </div>
+        <div class="ad2 ad2-v1">
+            <h2 class="ad-h2" style="border-bottom: 4px solid #fc215e;">保健礼品<a href="@Url.Action("category", "catalog", new { cateid = 77 })">更多...</a></h2>
+            @{List<AdvertInfo> floor7AdvertList = Adverts.GetAdvertList(39);
+
+              foreach (var advert in floor7AdvertList)
+              {
+                 string url = advert.Url.Length > 3 ? advert.Url : Url.Action("product", "catalog", new RouteValueDictionary { { "pid", TypeHelper.StringToInt(advert.ExtField5) } });
+                <div class="shangpin">
+                    <span style="border: 1px solid #F33; border-radius: 3px; color: #f33; padding: 2px;">
+                        推荐</span>
+                    <li><a href="@url" style="margin-right:10%; width:40%; float:left; height:auto;">
+                        <img src="@{@WorkContext.ImageCDN}/upload/advert/@advert.Body" onerror="nofindimg();"></a><a href="@url">@advert.ExtField1</a>
+                    </li>
+                    <div class="buy">
+                        <em>商城价：@advert.ExtField2 元</em>
+                        <h6>
+                            市场价：@advert.ExtField3 元</h6>
+                        <span style="background: #F60; left: 72.333333%"><a href="javascript:addProductToCart(@advert.ExtField5, 1,0)">
+                            加入购物车</a></span></div>
+                    <div id="clear">
+                    </div>
+                </div>
+              }
+            }
+            <div id="clear">
+            </div>
+        </div>
+        <div class="theme-pavilion">
+        </div>
+    </div>
+    <input type="hidden" value="@bannerAdvertList.Count" id="activity"/>
+    <input type="hidden" value="15" id="crazy" />
+    <script>
+        //活动轮播图
+        var picCount = $("#activity").val();
+        $(".pic-num1").css("width", (picCount * 300) + "px");
+        var forEach = function (array, callback) {
+            for (var i = 0, len = array.length; i < len; i++) { callback.call(this, array[i], i); }
+        }
+        var st = createPicMove("idContainer2", "idSlider2", picCount); //图片数量更改后需更改此数值
+        var nums = [];
+        //插入数字
+        for (var i = 0, n = st._count - 1; i <= n; i++) {
+            var li = document.createElement("li");
+            nums[i] = document.getElementById("idNum").appendChild(li);
+        }
+        //设置按钮样式
+        st.onStart = function () {
+            //forEach(nums, function(o, i){ o.className = ""})
+            forEach(nums, function (o, i) { o.className = st.Index == i ? "new-tbl-cell on" : "new-tbl-cell"; })
+        }
+        // 重新设置浮动
+        $("#idSlider2").css("position", "relative");
+
+        var _initX = 0;
+        var _finishX = 0;
+        var _startX = 0;
+        var _startY = 0;
+        function touchStart(event) {
+            _startX = event.touches[0].clientX;
+            _startY = event.touches[0].clientY;
+            _initX = _startX;
+        }
+        function touchMove(event) {
+            var touches = event.touches;
+            var _endX = event.touches[0].clientX;
+            var _endY = event.touches[0].clientY;
+            if (Math.abs(_endY - _startY) > Math.abs(_endX - _startX)) {
+                return;
+            }
+            event.preventDefault();
+            _finishX = _endX;
+            var _absX = Math.abs(_endX - _startX);
+            var lastX = $('#idSlider2').css('left').replace('px', '');
+            if (_startX > _endX) {
+                st.Stop();
+                $('#idSlider2').css('left', (parseInt(lastX) - _absX) + 'px');
+            } else {
+                st.Stop();
+                $('#idSlider2').css('left', (parseInt(lastX) + _absX) + 'px');
+            }
+            _startX = _endX;
+        }
+        //触屏  离开屏幕事件
+        function touchEnd(event) {
+            if (_finishX == 0) {
+                return;
+            }
+            if (_initX > _finishX) {
+                bindEvent(_initX, _finishX);
+            } else if (_initX < _finishX) {
+                bindEvent(_initX, _finishX);
+            }
+            _initX = 0;
+            _finishX = 0;
+        }
+
+        /**
+        *  绑定触屏触发事件
+        * param start
+        * param end
+        */
+        function bindEvent(start, end) {
+            if (start >= end) {
+                st.Next();
+            } else {
+                st.Previous();
+            }
+        }
+        st.Run();
+        var resetScrollEle = function () {
+            $("#shelper").css("width", $("#newkeyword").width() + "px");
+            var slider2Li = $("#idSlider2 li");
+            slider2Li.css("width", $(".scroll-wrapper").width() + "px");
+            $("#shelper").css("width", $("#newkeyword").width() + "px");
+        }
+
+        window.addEventListener("resize", function () {
+            st.Change = st._slider.offsetWidth / st._count;
+            st.Next();
+            resetScrollEle();
+        });
+        window.addEventListener("orientationchange", function () {
+            st.Change = st._slider.offsetWidth / st._count;
+            st.Next();
+            resetScrollEle();
+        })
+        resetScrollEle();
+        function clickResponse(obj) {
+            $('[res]').removeClass('on');
+            $(obj).addClass('on');
+            setTimeout(function () {
+                $(obj).removeClass('on');
+            }, 700);
+        }
+        $("#newkeyword").focus(function () {
+            setTimeout(function () {
+                window.scrollTo(0, $("#newkeyword").offset().top - 60);
+            }, 10);
+        });
+        $(document).ready(function () {
+            $("#categoryMenu li").addClass("route");
+        })
+    </script>
+    <div class="login-area" id="footer">
+        <div class="login">
+            <span class="lg-bar"></span><a href="#top">回到顶部</a>
+        </div>
+        <div class="copyright">@WorkContext.MallCopyright</div>
+        <div class="copyright" align="center"> @("网站备案号：" + WorkContext.MallConfig.ICP)</div>
+    </div>
+    <script type="text/javascript">
+        $("#unsupport").hide();
+        if (!testLocalStorage()) { //not support html5
+            if (0 != 0 && !$clearCart && !$teamId) {
+                $("#html5_cart_num").text(0 > 0 > 0);
+            }
+        } else {
+            updateToolBar('index');
+        }
+
+        $("#html5_cart").click(function () {
+            //	syncCart('e0d0f025d6d3e8e8d7be5428c43ef911',true);
+            location.href = 'cart/cart.action';
+        });
+
+        function reSearch() {
+            var depCity = window.sessionStorage.getItem("airline_depCityName");
+            if (testSessionStorage() && isNotBlank(depCity) && !/^\s*$/.test(depCity) && depCity != "") {
+                var airStr = '<form action="airline/list.action" method="post" id="reseach">'
+        + '<input type="hidden" name="sid"  value="e0d0f025d6d3e8e8d7be5428c43ef911"/>'
+        + '<input type="hidden" name="depCity" value="' + window.sessionStorage.getItem("airline_depCityName") + '"/>'
+        + '<input type="hidden" name="arrCity" value="' + window.sessionStorage.getItem("airline_arrCityName") + '"/>'
+        + '<input type="hidden" name="depDate" value="' + window.sessionStorage.getItem("airline_depDate") + '"/>'
+        + '<input type="hidden" name="depTime" value="' + window.sessionStorage.getItem("airline_depTime") + '"/>'
+        + '<input type="hidden" name="classNo" value="' + window.sessionStorage.getItem("airline_classNo") + '"/>'
+        + '</form>';
+                $("body").append(airStr);
+                $("#reseach").submit();
+            } else {
+                window.location.href = 'airline/index.action@sid=e0d0f025d6d3e8e8d7be5428c43ef911';
+            }
+        }
+        //banner 关闭点击
+        $('.div_banner_close').click(function () {
+            $('#div_banner_header').unbind('click');
+            jQuery.post('index/addClientCookieVal.json', function (d) {
+                $('#div_banner_header').slideUp(500);
+            });
+        });
+        //banner 下载点击
+        $('.div_banner_download').click(function () {
+            var downloadUrl = $(this).attr('url');
+            jQuery.post('index/addClientCookieVal.json', function (d) {
+                window.location.href = downloadUrl;
+            });
+        });
+	
+    </script>
+    <!--↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓底部列菜单开始↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓-->   
+<div class="nav4">
+
+	<nav>
+		<div id="nav4_ul" class="nav_4">
+			<ul class="box">
+				<li>
+					<a href="@Url.Action("index")" class=""><img src="@{@WorkContext.ImageCDN}/mobile/images/shouye.png"><span>首页</span></a>
+					
+				</li>
+				<li>
+					<a href="@Url.Action("brandlist", "category")" class=""><img src="@{@WorkContext.ImageCDN}/mobile/images/pinpai.png"><span>&nbsp; 品牌&nbsp;</span></a>
+					
+				</li>
+				<li>
+					<a href="@Url.Action("list", "category")" class=""><img src="@{@WorkContext.ImageCDN}/mobile/images/fenlei.png"><span>分类</span></a>
+					
+				</li>
+                <li>
+					<a href="@Url.Action("index", "cart")" class=""><img src="@{@WorkContext.ImageCDN}/mobile/images/gouwuche.png"><span>购物车</span></a>
+			
+				</li>
+                <li>
+					<a href="javascript:;"> <img src="@{@WorkContext.ImageCDN}/mobile/images/wode.png"><span>我的</span></a>
+					<dl>
+						<dd><a href="@Url.Action("orderlist", "ucenter")"><span>我的订单</span></a></dd>
+						<dd><a href="@Url.Action("index", "ucenter")"><span>个人中心</span></a></dd>
+                          @if (WorkContext.Uid < 1)
+                          {
+						    <dd><a href="@Url.Action("login", "account", new RouteValueDictionary { { "returnUrl", WorkContext.Url } })"><span>账号绑定</span></a></dd>
+						    <dd><a href="@Url.Action("fastlogin", "account", new RouteValueDictionary { { "returnUrl", WorkContext.Url } })"><span>微信登录</span></a></dd>
+                          }
+					</dl>
+				</li>
+			
+			</ul>
+		</div>
+	</nav>
+	
+	<div id="nav4_masklayer" class="masklayer_div on">&nbsp;</div>
+
+</div>
+
+<script type="text/javascript">
+    nav4.bindClick(document.getElementById("nav4_ul").querySelectorAll("li>a"), document.getElementById("nav4_masklayer"));
+</script>	
+    <!--↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑底部列菜单结束↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑-->   	
+</body>
+</html>

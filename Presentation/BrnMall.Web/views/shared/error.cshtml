@@ -1,0 +1,13 @@
+﻿@{
+    Layout = "~/Views/Shared/_layout.cshtml";
+    ViewBag.Title = "信息错误-" + WorkContext.MallConfig.SiteTitle;
+}
+@section headerSection{
+    <link href="@{@WorkContext.CSSCDN}/css/base.css" rel="stylesheet" type="text/css" />
+    }
+
+<div class="box">
+<div class="prompt" style="margin-top: 60px;">
+    抱歉，网站貌似出现了点问题，请刷新页面，若还是未解决，请联系我们~
+</div>
+</div>

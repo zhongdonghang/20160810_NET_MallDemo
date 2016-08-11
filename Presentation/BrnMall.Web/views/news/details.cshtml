@@ -1,0 +1,40 @@
+﻿@model BrnMall.Web.Models.NewsModel
+@{
+    Layout = "~/Views/Shared/_layout.cshtml";
+    ViewBag.Title = Model.NewsInfo.Title + "-" + WorkContext.MallConfig.SiteTitle;
+}
+@section headerSection{
+    <link href="@{@WorkContext.CSSCDN}/css/base.css" rel="stylesheet" type="text/css" />
+    <link href="@{@WorkContext.CSSCDN}/css/help.css" rel="stylesheet" type="text/css" />
+    }
+
+<div class="breadcrumb box">
+</div>
+<div class="box">
+<div id="helpL">
+
+    @{
+        foreach (NewsTypeInfo info in Model.NewsTypeList)
+        {
+             <dl>
+             <dt><a href="@Url.Action("list", new { newsTypeId =info.NewsTypeId})" style="@(info.NewsTypeId==Model.NewsInfo.NewsTypeId?"color:Red":"")">@info.Name</a></dt>
+             </dl>
+        }
+     
+    }
+
+</div>
+<div id="helpR">
+<div id="news">
+<h1 class="newsTitle">@Model.NewsInfo.Title</h1>
+<div class="newsInfo">时间：@Model.NewsInfo.AddTime.ToString("yyyy-MM-dd HH:mm:ss")</div>
+<div class="edit">
+@Html.Raw(Model.NewsInfo.Body)
+</div>
+
+</div>
+</div>
+
+<div class="clear"></div>
+</div>
+

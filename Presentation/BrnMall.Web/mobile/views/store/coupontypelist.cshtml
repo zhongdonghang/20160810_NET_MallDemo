@@ -1,0 +1,24 @@
+﻿@model BrnMall.Web.Mobile.Models.CouponTypeListModel
+@{
+    Layout = "~/mobile/Views/Shared/_layout.cshtml";
+    ViewBag.Title = "优惠劵列表";
+}
+@section headerSection{
+    <link href="@{@WorkContext.CSSCDN}/mobile/css/store.css" rel="stylesheet" type="text/css">
+    <script type="text/javascript">
+        uid=@WorkContext.Uid;
+    </script>
+}
+<div class="yhjBox yhjBox1">
+
+@foreach (CouponTypeInfo info in Model.CouponTypeList)
+{
+<a href="javascript:getCoupon(@info.CouponTypeId);" class="yhj">
+<div class="line"></div>
+<p><span class="other">@info.Money</span><span>@info.Name</span><span>@info.SendStartTime.ToShortDateString() - @info.UseEndTime.ToShortDateString()</span></p>
+<span class="useBt">领取</span>
+</a>
+}
+
+</div>
+

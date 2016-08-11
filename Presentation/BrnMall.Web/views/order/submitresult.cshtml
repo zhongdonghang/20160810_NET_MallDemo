@@ -1,0 +1,163 @@
+﻿@model BrnMall.Web.Models.SubmitResultModel
+@{
+    Layout = "~/Views/Shared/_layout.cshtml";
+    ViewBag.Title = "订单提交结果-" + WorkContext.MallConfig.SiteTitle;
+    string oidlist = Model.OidList.Replace(',', 'A') + Randoms.CreateRandomValue(10, false).ToUpper();
+
+}
+@section headerSection{
+    <link href="@{@WorkContext.CSSCDN}/css/base.css" rel="stylesheet" type="text/css" />
+    <link href="@{@WorkContext.CSSCDN}/css/content.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="@{@WorkContext.ScriptCDN}/scripts/order.js"></script>
+}
+<div class="buyTipInner" style="width: 700px; padding-bottom: 50px;">
+    @if (Model.AllPayMoney > 0)
+    {
+        <table width="100%" border="0" cellspacing="0" class="dingdan" style="margin-top: 30px;
+            font-size: medium">
+            <tbody>
+             <tr>
+                <td>
+                     订单商品：
+                 </td>
+                 <td>
+                 </td>
+             </tr>
+                @foreach (OrderProductInfo info in Model.OrderProductList)
+                {
+                    <tr>
+                        <td>
+                            &nbsp;
+                        </td>
+                        <td>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="proList">
+                                <img src="@{@WorkContext.ImageCDN}/upload/store/@info.StoreId/product/show/thumb60_60/@info.ShowImg"  onerror="nofindimg();" width="50" height="50" />
+                                <a href="@Url.Action("product", "catalog", new RouteValueDictionary { { "pid", info.Pid } })">@info.Name
+                                </a>
+                                <div class="clear">
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            x @info.BuyCount
+                        </td>
+                    </tr>
+                }
+                <tr>
+                    <td>
+                        &nbsp;
+                    </td>
+                    <td>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="zffs" id="payPluginListBlock" style="display: none;">
+                            <ul class="zffsList">
+                                @foreach (PluginInfo info in Model.PayPluginList)
+                                {
+                                    //去除货到付款的选择
+                                    if (info.SystemName == "cod")
+                                    {
+                                        continue;
+                                    }
+                                    
+                                    <li>
+                                        <label>
+                                            @if (info.SystemName == "creditpay")
+                                            {
+                                                if (WorkContext.UserAmount < Model.AllPayMoney)
+                                                { 
+                                                <b>
+                                                    <input type="radio" class="radio"  disabled="disabled" name="payPluginItem" onclick="changePayPlugin('@info.SystemName','@Model.OidList')" />@info.FriendlyName</b>
+                                                <i><a style="color: Red; font-size: small">&nbsp;&nbsp;&nbsp;可用余额为： @WorkContext.UserAmount 元，余额不足，无法支付！</a></i>
+                                                }
+                                                else
+                                                {
+                                                  <b><input type="radio" class="radio" name="payPluginItem" onclick="changePayPlugin('@info.SystemName','@Model.OidList')" />@info.FriendlyName</b>
+                                                <i><a style="color: Red; font-size: small">&nbsp;&nbsp;&nbsp;可用余额为： @WorkContext.UserAmount 元。</a></i>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <b>
+                                                    <input type="radio" class="radio" name="payPluginItem" onclick="changePayPlugin('@info.SystemName','@Model.OidList')" />@info.FriendlyName</b>
+                                            }
+                                        </label>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                        <div class="showOrder" id="payPluginShowBlock">
+                            <img src="@{@WorkContext.ImageCDN}/images/ok.gif" width="15" height="15" />
+                            @Model.PayPlugin.FriendlyName
+                            @if (Model.PayPlugin.SystemName == "creditpay")
+                            {
+                                <i><a style="color: Red; font-size: small">可用余额为： @WorkContext.UserAmount 元</a></i>
+                            }
+                            <a href="javascript:void(0)" onclick="showPayPluginList()" class="shrSelectBt">[更改支付方式]</a></div>
+                    </td>
+                    <td>
+                        总金额：@Model.AllPayMoney 元
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        &nbsp;
+                    </td>
+                    <td>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        @if (Model.PayPlugin.SystemName == "creditpay")
+                        {
+                            <script type="text/javascript">
+                                var comfirmPayCredit = function () {
+                                    var password = document.getElementById("password").value;
+                                    if (password == undefined || password == null || password.length < 1) {
+                                        document.getElementById("error_tip").innerHTML = "请输入支付密码！";
+                                        document.getElementById('error_tip').style.display = 'block';
+                                        return;
+                                    }
+                                    $.ajax({
+                                        url: '@Url.Action("CreditPay", "Ucenter")',
+                                        type: "GET",
+                                        dataType: "json",
+                                        data: { oidList: '@Model.OidList', password: password },
+                                        success: function (data) {
+                                            if (data == "succ") {
+                                                location.href = '@Url.Action("PayResult", "Order",new{ oidList = oidlist})';
+                                            }
+                                            else {
+                                                document.getElementById("error_tip").innerHTML = data;
+                                                document.getElementById('error_tip').style.display = 'block';
+                                            }
+                                        }
+                                    });
+                                };
+                            </script>
+                            @:支付密码：<input type="password" id="password" style=" height:25px;" />&nbsp;&nbsp;
+                            <input type="button" onclick="comfirmPayCredit()"value="确认支付"class="redBtn"/>
+                            <div id="error_tip" style=" color:Red;  font-size:90%: display:none;"></div>
+                        }
+                        else
+                        {
+                            <span>当前支付方式为 @Model.PayPlugin.FriendlyName </span>
+                            <a href="@Url.Action("payshow", new RouteValueDictionary { { "oidList", Model.OnlinePayOidList } })"  class="redBT">
+                                立即前往支付</a>
+                        }
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    }
+    else
+    { 
+        @:<div style="margin-top:50px; margin-bottom:50px; font-size:large; color:Green;">您的订单已经提交成功,我们会尽快为您发货！</div>
+            }
+</div>

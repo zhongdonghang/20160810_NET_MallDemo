@@ -1,0 +1,77 @@
+﻿@model BrnMall.Web.Models.QuestionModel
+@{
+    Layout = "~/Views/Shared/_layout.cshtml";
+    ViewBag.Title = Model.HelpInfo.Title + "-" + WorkContext.MallConfig.SiteTitle;
+}
+@section headerSection{
+    <link href="@{@WorkContext.CSSCDN}/css/base.css" rel="stylesheet" type="text/css" />
+    <link href="@{@WorkContext.CSSCDN}/css/help.css" rel="stylesheet" type="text/css" />
+    }
+
+<div class="breadcrumb box">
+<strong><a href="#">消费者帮助中心</a></strong>
+<span>&nbsp;&gt;&nbsp;<a href="@Url.Action("question", new RouteValueDictionary { { "id", Model.HelpInfo.Id } })">@Model.HelpInfo.Title</a></span></div>
+<div class="box">
+<script type="text/javascript">
+    function toggleClass(obj) {
+        var classValue = obj.className;
+        if (classValue == "hot") {
+            obj.className = "";
+        }
+        else {
+            obj.className = "hot";
+        }
+    }
+</script>
+<div id="helpL">
+
+    @{
+        int i = 1;
+        foreach (HelpInfo info in Model.HelpList)
+        {
+            if (info.Pid != 0)
+            {
+                if (info.Id == Model.HelpInfo.Id)
+                {
+                    @:<dd class="hot">
+                }
+                else
+                {
+                    @:<dd>
+                }
+                if (info.Url.Length == 0)
+                {
+                    <a href="@Url.Action("question", new RouteValueDictionary { { "id", info.Id } })">@info.Title</a>
+                }
+                else
+                {
+                    <a href="@info.Url">@info.Title</a>
+                }
+                @:</dd>
+            }
+            else
+            {
+                if (i != 1)
+                {
+                    @:</dl>
+                }
+                @:<dl class="hot" onclick="toggleClass(this)"><dt>@info.Title<b></b></dt>
+                i++;
+            }
+        }
+        if (Model.HelpList.Count > 0)
+        {
+            @:</dl>
+        }
+    }
+
+</div>
+<div id="helpR">
+<div class="helpRT">@Model.HelpInfo.Title</div>
+<div class="edit">
+@Html.Raw(Model.HelpInfo.Description)
+</div>
+</div>
+<div class="clear"></div>
+</div>
+

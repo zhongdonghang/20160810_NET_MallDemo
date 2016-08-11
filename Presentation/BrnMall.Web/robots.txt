@@ -1,0 +1,23 @@
+# robots.txt for BrnMall
+# Version 1.3.155
+
+User-agent: *
+
+Disallow: /malladmin/
+Disallow: /storeadmin/
+Disallow: /admin_mall/
+Disallow: /admin_store/
+Disallow: /App_Data/
+Disallow: /controllers/
+Disallow: /css/
+Disallow: /images/
+Disallow: /models/
+Disallow: /plugins/
+Disallow: /scripts/
+Disallow: /themes/
+Disallow: /upload/
+Disallow: /views/
+Disallow: /watermarks/
+Disallow: /ucenter/
+Disallow: /bin/
+Disallow: /obj/

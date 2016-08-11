@@ -1,0 +1,44 @@
+﻿@model BrnMall.Web.Mobile.Models.SafeSuccessModel
+@{
+    Layout = "~/mobile/Views/Shared/_layout.cshtml";
+    ViewBag.Title = "修改成功";
+}
+@section headerSection{
+    <link href="@{@WorkContext.CSSCDN}/mobile/css/ucenter.css" rel="stylesheet" type="text/css">
+}
+<div class="userForm">
+
+<div class="userFormT">
+<ul>
+<li class="T1"><span>1</span></li>
+<li class="Tline"><strong></strong></li>
+<li class="T2"><span>2</span></li>
+<li class="Tline"><strong></strong></li>
+<li class="T2"><span class="hot">3</span></li>
+</ul>
+</div>
+
+<div class="userFormT" style="padding:0 20px;">
+<ul>
+<li style="width:96px;">身份验证</li>
+<li style="width:96px;text-align:center;">修改安全信息</li>
+<li style="width:96px; text-align:right;">修改成功</li>
+</ul>
+</div>
+
+<div class="userFormC">
+    @if (Model.Action == "updatepassword")
+    {
+        @:密码更新成功！
+    }
+    else if (Model.Action == "updatemobile")
+    {
+        @:手机更新成功！
+    }
+    else if (Model.Action == "updatepaypassword")
+    {
+        @:支付密码更新成功！
+    }
+</div>
+
+</div>

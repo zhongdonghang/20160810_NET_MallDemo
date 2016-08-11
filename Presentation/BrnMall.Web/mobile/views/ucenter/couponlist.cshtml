@@ -1,0 +1,33 @@
+﻿@model BrnMall.Web.Mobile.Models.CouponListModel
+@{
+    Layout = "~/mobile/Views/Shared/_layout.cshtml";
+    ViewBag.Title = "优惠卷列表";
+}
+@section headerSection{
+    <link href="@{@WorkContext.CSSCDN}/mobile/css/ucenter.css" rel="stylesheet" type="text/css">
+}
+<div class="myAssetsNav">
+<a href="#" class="hot"><strong>优惠卷</strong></a>
+</div>
+
+<div class="cards">
+
+@foreach (DataRow row in Model.CouponList.Rows)
+{
+<div class="card yellow-card">
+<strong class="price">¥@row["money"]</strong>
+<span class="type">@row["name"]</span>
+<span class="expire">
+        @if (row["usemode"].ToString() == "0")
+        {
+        @row["useendtime"]
+        }
+        else
+        {
+        @TypeHelper.ObjectToDateTime(row["activatetime"]).AddDays(TypeHelper.ObjectToInt(row["useexpiretime"]))
+        }
+到期</span>                
+</div>
+}
+
+</div>

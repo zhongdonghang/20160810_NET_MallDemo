@@ -1,0 +1,235 @@
+﻿@model BrnMall.Web.StoreAdmin.Models.StoreModel
+
+@section header{
+    <title>店铺信息</title>
+    <link type="text/css" rel="stylesheet" href="/admin_store/content/css/site.css"/>
+    <script type="text/javascript" src="/admin_store/scripts/jquery.js"></script>
+    <link href="/admin_store/content/css/uploadify.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript">
+        //防止chrome缓存jquery.uploadify.js文件，而引起chrome崩溃
+        document.write("<script type='text/javascript' "
+            + "src='/admin_store/scripts/jquery.uploadify.js?" + new Date()
+            + "'></s" + "cript>");  
+    </script>
+    <script type="text/javascript" src="/admin_store/scripts/jquery.validate.js"></script>
+    <script type="text/javascript" src="/admin_store/scripts/jquery.validate.unobtrusive.js"></script>
+    <script type="text/javascript" src="/admin_store/scripts/region.js"></script>
+    <script type="text/javascript">
+        provinceId = @ViewData["provinceId"]; //省id
+        cityId = @ViewData["cityId"]; //市id
+        countyId = @ViewData["countyId"]; //县或区id
+
+        $(function () {
+            $("#uploadify").uploadify({
+                'formData': { 'uid': '@WorkContext.Uid', 'password': '@WorkContext.EncryptPwd' },
+                'swf': '/admin_store/content/flashes/uploadify.swf',
+                'uploader': '@WorkContext.MallConfig.UploadServer/storeadmin/tool/upload?operation=uploadstorelogo',
+                'buttonText': '上传图片',
+                'height': 24,
+                'width': 80,
+                'fileTypeDesc': 'Image Files',
+                'fileTypeExts': '@ViewData["allowImgType"]',
+                'fileSizeLimit': '@ViewData["maxImgSize"]',
+                'auto': true,
+                'multi': false,
+                'removeTimeout': 2,
+                'onUploadSuccess': function (file, data, response) {
+                    if (data == "-1")
+                        alert('上传图片不能为空');
+                    else if (data == "-2")
+                        alert('上传图片的类型不允许');
+                    else if (data == "-3")
+                        alert('上传图片超过系统允许的最大大小');
+                    else
+                    {
+                        $(".logoBlock").empty().append("<img width=\"88\" height=\"88\" src=\"@WorkContext.MallConfig.UploadServer/upload/store/@WorkContext.StoreId/logo/thumb@{@ViewData["size"].ToString()}/" + data + "\"  />");
+                        $("#Logo").val(data);
+                        $(".upload span[htmlFor='Logo']").empty();
+                    }
+                }
+            });
+
+
+            $("#uploadify2").uploadify({
+                            'formData': { 'uid': '@WorkContext.Uid', 'password': '@WorkContext.EncryptPwd' },
+                            'swf': '/admin_store/content/flashes/uploadify.swf',
+                            'uploader': '@WorkContext.MallConfig.UploadServer/storeadmin/tool/upload?operation=uploadstorebanner',
+                            'buttonText': '上传图片',
+                            'height': 24,
+                            'width': 80,
+                            'fileTypeDesc': 'Image Files',
+                            'fileTypeExts': '@ViewData["allowImgType"]',
+                            'fileSizeLimit': '@ViewData["maxImgSize"]',
+                            'auto': true,
+                            'multi': false,
+                            'removeTimeout': 2,
+                            'onUploadSuccess': function (file, data, response) {
+                                if (data == "-1")
+                                    alert('上传图片不能为空');
+                                else if (data == "-2")
+                                    alert('上传图片的类型不允许');
+                                else if (data == "-3")
+                                    alert('上传图片超过系统允许的最大大小');
+                                else
+                                {
+                                    $(".bannerBlock").empty().append("<img width=\"88\" height=\"88\" src=\"@WorkContext.MallConfig.UploadServer/upload/store/@WorkContext.StoreId/banner/" + data + "\"  />");
+                                    $("#Banner").val(data);
+                                    $(".upload span[htmlFor='Banner']").empty();
+                                }
+                            }
+                        });
+
+        });
+    </script>
+    <style type="text/css">
+    .uploadBut .cancel,.uploadBut .fileName,.uploadBut .data,.uploadBut .uploadify-progress{ display:none;}
+    </style>
+}
+
+@section body{
+<h1 class="rightH1">
+店铺管理 &gt;&gt; 店铺信息
+<div class="right">
+<div class="clear"></div>
+</div>
+<div class="clear"></div>
+</h1>
+@using (Html.BeginForm())
+{
+<div class="addTable">
+<table width="100%">
+  <tr>
+    <td width="80px" align="right">店铺名称：</td>
+    <td>@Html.TextBoxFor(x => x.StoreName, new { @class = "input", size = "35" })@Html.ValidationMessageFor(x => x.StoreName)</td>
+    </tr>
+            <tr>
+    <td align="right">Logo：</td>
+    <td>
+
+      <div class="upload">
+        <div class="uploadPreview logoBlock">
+        @if (!string.IsNullOrEmpty(Model.Logo))
+        {
+            <img width="88" height="88" src="@WorkContext.MallConfig.UploadServer/upload/store/@WorkContext.StoreId/logo/thumb@{@ViewData["size"].ToString()}/@Model.Logo" /> 
+        }
+        else
+        {
+             @:暂无图片
+        }
+        </div>
+        <div class="uploadProgressBar" style=" display:none;" id="uploadify-queue"></div>
+        <div class="uploadBut"><input type="file" name="uploadify" id="uploadify" /></div>
+        @Html.TextBoxFor(x => x.Logo, new { @class = "hide" })
+        <div style="position:absolute; top:30px; left:180px;">@Html.ValidationMessageFor(x=>x.Logo)</div>
+      </div>
+      <br />
+
+    </td>
+    </tr>
+
+        <tr>
+    <td align="right">Banner：</td>
+    <td>
+
+      <div class="upload">
+        <div class="uploadPreview bannerBlock">
+        @if (!string.IsNullOrEmpty(Model.Banner))
+        {
+            <img width="88" height="88" src="@WorkContext.MallConfig.UploadServer/upload/store/@WorkContext.StoreId/banner/@Model.Banner" /> 
+        }
+        else
+        {
+             @:暂无图片
+        }
+        </div>
+        <div class="uploadProgressBar" style=" display:none;" id="uploadify-queue2"></div>
+        <div class="uploadBut"><input type="file" name="uploadify2" id="uploadify2" /></div>
+        @Html.TextBoxFor(x => x.Banner, new { @class = "hide" })
+        <div style="position:absolute; top:30px; left:180px;">@Html.ValidationMessageFor(x => x.Banner)</div>
+        <a style="color:Red;position:absolute; top:30px; left:180px;">最佳图片像素：1920*200</a>
+      </div>
+
+    </td>
+    </tr>
+
+        <tr>
+    <td align="right">店铺行业：</td>
+    <td>@Html.DropDownListFor(x => x.StoreIid, ViewData["storeIndustryList"] as List<SelectListItem>)@Html.ValidationMessageFor(x => x.StoreIid)
+    </td>
+    </tr>
+
+    <tr>
+    <td align="right">店铺主题：</td>
+    <td>@Html.DropDownListFor(x => x.Theme, ViewData["themeList"] as List<SelectListItem>)@Html.ValidationMessageFor(x => x.Theme)
+    </td>
+    </tr>
+
+          <tr>
+    <td align="right">手机号：</td>
+    <td>@Html.TextBoxFor(x => x.Mobile, new { @class = "input", size = "35" })@Html.ValidationMessageFor(x => x.Mobile)</td>
+    </tr>
+
+              <tr>
+    <td align="right">固定电话：</td>
+    <td>@Html.TextBoxFor(x => x.Phone, new { @class = "input", size = "35" })@Html.ValidationMessageFor(x => x.Phone)</td>
+    </tr>
+
+              <tr>
+    <td align="right">腾讯QQ：</td>
+    <td>@Html.TextBoxFor(x => x.QQ, new { @class = "input", size = "35" })@Html.ValidationMessageFor(x => x.QQ)</td>
+    </tr>
+
+          <tr>
+    <td align="right">阿里旺旺：</td>
+    <td>@Html.TextBoxFor(x => x.WW, new { @class = "input", size = "35" })@Html.ValidationMessageFor(x => x.WW)</td>
+    </tr>
+
+                  <tr>
+    <td align="right">所在区域：</td>
+    <td>
+        <select class="provinceSelect" id="provinceSelect">
+        <option selected="selected" value="-1">请选择</option>
+        </select>
+        <select class="citySelect" id="citySelect">
+        <option selected="selected" value="-1">请选择</option>
+        </select>
+        <select class="countySelect" id="countySelect" name="regionid">
+        <option selected="selected" value="-1">请选择</option>
+        </select>
+        @Html.ValidationMessageFor(x => x.RegionId)
+    </td>
+    </tr>
+              <tr>
+    <td align="right">店铺公告：</td>
+    <td>@Html.TextAreaFor(x => x.Announcement, new { cols = "40", rows = "6" })@Html.ValidationMessageFor(x => x.Announcement)</td>
+    </tr>
+
+              <tr>
+    <td align="right">店铺描述：</td>
+    <td>
+    <br />
+    @Html.TextAreaFor(x => x.Description, new { cols = "40", rows = "6" })@Html.ValidationMessageFor(x => x.Description)</td>
+    </tr>
+
+  <tr>
+    <td align="right">&nbsp;</td>
+    <td>
+    <a href="" class="addBt" id="sumbitBut" ><img src="/admin_store/content/images/submit.jpg" /></a>
+            <script type="text/javascript">
+                $(function () {
+                    $("#sumbitBut").click(function () {
+                        $("form:first").submit();
+                        return false;
+                    })
+                });
+        </script>
+    </td>
+    </tr>
+  <tr>
+    <td align="right">&nbsp;</td>
+    <td>&nbsp;</td>
+    </tr>
+</table>
+</div>
+}
+}

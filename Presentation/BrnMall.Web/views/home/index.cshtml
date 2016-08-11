@@ -1,0 +1,451 @@
+﻿@{
+    Layout = "~/Views/Shared/_layout_topmodel.cshtml";
+}
+@section headerSection{
+    <link href="@{@WorkContext.CSSCDN}/css/flickerplate.css" rel="stylesheet" type="text/css">
+    <script src="@{@WorkContext.ScriptCDN}/scripts/scrolljs/jquery-v1.10.2.min.js"></script>
+    <script src="@{@WorkContext.ScriptCDN}/scripts/scrolljs/modernizr-custom-v2.7.1.min.js"></script>
+    <script src="@{@WorkContext.ScriptCDN}/scripts/scrolljs/jquery-finger-v0.1.0.min.js"></script>
+    <script src="@{@WorkContext.ScriptCDN}/scripts/scrolljs/flickerplate.min.js"></script>
+    <script>
+        $(document).ready(function () {
+
+            $('.flicker-example').flicker();
+        });
+    </script>
+}
+<div class="block">
+    <div class="head15_logo_box">
+        <div class="logo">
+            <h1>
+                <a href="@WorkContext.MallConfig.SiteUrl">
+                    <img src="@{@WorkContext.ImageCDN}/images/logo.png" />
+                </a>
+            </h1>
+        </div>
+        <a class="head15_buy" id="ECS_CARTINFO"  href="@Url.Action("index", "cart")">
+            <div class="buy_quantity">@WorkContext.CartProductCount</div>
+        </a>
+        <div class="head15_search">
+            <div class="search_box">
+                <div id="searchForm">
+                    <input type="text" id="keyword" name="keywords" class="Stext" autocomplete="off" onkeydown="javascript:if(event.keyCode==13) mallSearch(document.getElementById('keyword').value);" value="@WorkContext.SearchWord" />
+                    <input name="" type="button" class="sch_btn" onclick="mallSearch(document.getElementById('keyword').value)" />
+                </div>
+            </div>
+            <div class="search_word">
+                @{
+                    List<AdvertInfo> searchWordAdvertList = Adverts.GetAdvertList(5);
+                }
+                @foreach (var advert in searchWordAdvertList)
+                {
+                    string url = advert.Url.Length > 3 ? advert.Url : Url.Action("search", "catalog", new RouteValueDictionary { { "keyword", advert.Body } }); 
+                    <em><a href="@url">@advert.Body</a></em>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<div style="clear: both">
+</div>
+<div class="head15_menu_bg">
+    <div class="head15_menu_box">
+        <div class="head15_menu_big">
+            <ul>
+                <li><a href="/">首页</a></li>
+                @{  
+                    List<AdvertInfo> advertList = Adverts.GetAdvertList(6);
+
+                    foreach (var advert in advertList)
+                    {
+                        string url = advert.Url.Length > 3 ? advert.Url : Url.Action("search", "catalog", new RouteValueDictionary { { "keyword", advert.Body } });
+                    <li><a href="@url">@advert.Body</a></li>
+                    }
+                }
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="clearfix">
+</div>
+<div style="width: 1200px;">
+    <script type="text/javascript">
+        //初始化主菜单
+        function sw_nav2(obj, tag) {
+            var DisSub2 = document.getElementById("DisSub2_" + obj);
+            var HandleLI2 = document.getElementById("HandleLI2_" + obj);
+            if (tag == 1) {
+                DisSub2.style.display = "block";
+                HandleLI2.className = "current";
+            }
+            else {
+                DisSub2.style.display = "none";
+                HandleLI2.className = "";
+            }
+        }
+    </script>
+    <div id="category_tree">
+        <dl class="clearfix">
+            @{
+                List<NavInfo> navList = Navs.GetNavList();
+                List<NavInfo> navLay1 = navList.FindAll(x => x.Pid == 0);
+            }
+            @for (int i = 0; i < navLay1.Count(); i++)
+            {
+                string handleString = "HandleLI2_" + (i + 1).ToString();
+                string DisSubString = "DisSub2_" + (i + 1).ToString();
+                <div class="dt" onmouseover="sw_nav2(@(i + 1),1);" onmouseout="sw_nav2(@(i + 1),0);">
+                    <div id="@handleString" style=" position:relative; z-index:9999999999" class="">
+                        <a class="a " href="@navLay1[i].Url"  target="_blank">@navLay1[i].Name<img src="@{@WorkContext.ImageCDN}/images/biao8.gif"></a>
+                    </div>
+                    <dd id="@DisSubString" style="display: none;">
+                        <ul>
+                            @{List<NavInfo> navLay2 = navList.FindAll(x => x.Pid == navLay1[i].Id);}
+                            @for (int j = 0; j < navLay2.Count(); j++)
+                            {
+                                <li><a class="over_2 f_l" href="@navLay2[j].Url" target="_blank">@navLay2[j].Name</a>
+                                    <div class="list_r f_r">
+                                        @{List<NavInfo> navLay3 = navList.FindAll(x => x.Pid == navLay2[j].Id);}
+                                        @for (int k = 0; k < navLay3.Count(); k++)
+                                        {
+                                            string url = navLay3[k].Url.Length > 3 ? navLay3[k].Url : Url.Action("Search", "catalog", new RouteValueDictionary { { "keyword", navLay3[k].Name } });
+                                            <em><a class="over_3" href="@url"  target="_blank">@navLay3[k].Name</a></em>
+                                        }
+                                    </div>
+                                </li>     
+                            }
+                        </ul>
+                    </dd>
+                </div>
+            }
+        </dl>
+    </div>
+    @{  
+        List<AdvertInfo> bannerList = Adverts.GetAdvertList(4);
+    }
+    <div class="bannerpic">
+        <div class="flicker-example" data-block-text="false">
+            <ul>
+                @foreach (AdvertInfo info in bannerList)
+                {
+                    string url = info.Url.Length > 3 ? info.Url : Url.Action("product", "catalog", new RouteValueDictionary { { "pid", TypeHelper.StringToInt(info.ExtField5) } }); 
+                    <li><a href="@url" target="_blank">
+                        <img src="@{@WorkContext.ImageCDN}/upload/advert/@info.Body"  onerror="nofindimg();"  width="100%" height="419" border="0"></a>
+                    </li>              
+                }
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="blank5">
+</div>
+<div class="blank5">
+</div>
+<div class="blank5">
+</div>
+<div class="block clearfix">
+    <div class="AreaL">
+        <div id="mallNews" class="  box_1">
+            <h3>
+                <span>商城快讯</span><a class="more" href="@Url.Action("list", "news")" style="padding-right: 5px;margin-right: 10px;height: 35px;line-height: 35px;color: blue;text-decoration: underline;font-family: -webkit-body;">更多</a></h3>
+            <div class="NewsList tc  " style="border-top: none">
+                <ul>
+                    @{
+                        DataTable homeNewsList = News.GetHomeNewsList(0, 8);
+                    }
+                    @foreach (DataRow row in homeNewsList.Rows)
+                    {
+                        <li><a href="@Url.Action("details", "news", new RouteValueDictionary { { "newsId", row["newsid"] } })"   target="_blank">@row["title"]</a></li>
+                    }
+                </ul>
+            </div>
+        </div>
+        <div class="blank">
+        </div>
+        @{ List<AdvertInfo> newsBottomAdvertList = Adverts.GetAdvertList(9);}
+        @if (newsBottomAdvertList != null && newsBottomAdvertList.Count() > 0)
+        {
+            string nburl = newsBottomAdvertList[0].Url.Length > 3 ? newsBottomAdvertList[0].Url : Url.Action("product", "catalog", new RouteValueDictionary { { "pid", TypeHelper.StringToInt(newsBottomAdvertList[0].ExtField5) } }); 
+        @*新闻底部广告位*@
+        <table cellpadding="0" cellspacing="0">
+            <tbody>
+                <tr>
+                    <td>
+                        
+                        <a href="@nburl"   target="_blank">
+                            <img src="@{@WorkContext.ImageCDN}/upload/advert/@newsBottomAdvertList[0].Body"  onerror="nofindimg();"  width="220" height="220" border="0"></a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        }
+        <div class="blank">
+        </div>
+    </div>
+    <div class="Arear">
+        <div class="sale_box clearfix">
+            <h3>
+                <span>热门商品</span></h3>
+            <div class="clearfix">
+                @{
+                    List<AdvertInfo> bannerBottomAdvertList = Adverts.GetAdvertList(8);
+                }
+                @foreach (AdvertInfo info in bannerBottomAdvertList)
+                {
+                    string url = info.Url.Length > 3 ? info.Url : Url.Action("product", "catalog", new RouteValueDictionary { { "pid", TypeHelper.StringToInt(info.ExtField5) } }); 
+
+                    <ul class="clearfix">
+                        <li class="goodsimg"><a href="@url"  target="_blank">
+                            <img src="@{@WorkContext.ImageCDN}/upload/advert/@info.Body"  onerror="nofindimg();" border="0" alt="@info.ExtField1 " class="B_blue"></a></li>
+                        <li>
+                            <p class="f1">
+                                <a href="@url" target="_blank">@info.ExtField1</a></p>
+                            惊爆价：<font class="f1">￥@info.ExtField2 元</font></li>
+                    </ul>
+                }
+            </div>
+        </div>
+        <div class="brand_box clearfix">
+            <h3>
+                <span>热门品牌</span><a href="@Url.Action("BrandList", "Catalog")" style="height: 32px;line-height: 32px;">更多</a></h3>
+            <div class="clearfix">
+                @{
+                    List<BrandInfo> brandlist = Brands.GetBrandList(8, 1, "");
+                }
+                @foreach (BrandInfo info in brandlist)
+                {
+                    <ul class="clearfix">
+                        <li class="goodsimg"><a href="@Url.Action("Search", "catalog", new RouteValueDictionary { { "keyword", info.Name } })"  target="_blank">
+                            <img src="@{@WorkContext.ImageCDN}/upload/brand/thumb100_100/@info.Logo"  onerror="nofindimg();" border="0" alt="@info.Name " class="B_blue"></a></li>
+                    </ul>
+                }
+            </div>
+        </div>
+        <div class="blank" style="height: 1px;">
+        </div>
+    </div>
+    <div class="goodsBox_1">
+        <div class="xm-box">
+            <div class="title">
+                <span class="floor-icon"><i></i><b></b></span>
+                <h2>
+                    保健品</h2>
+                <a class="more" href="@Url.Action("category", "catalog", new RouteValueDictionary { { "cateId", 75 } })">
+                    更多</a></div>
+            <div id="show_new_area" class="clearfix xm-boxs">
+                @{
+                    List<AdvertInfo> floor1AdvertList1 = Adverts.GetAdvertList(10);
+                }
+                @foreach (AdvertInfo info in floor1AdvertList1)
+                {
+                    string url = info.Url.Length > 3 ? info.Url : Url.Action("product", "catalog", new RouteValueDictionary { { "pid", TypeHelper.StringToInt(info.ExtField5) } }); 
+
+                    <div class="goodsItem goodsItems">
+                        <a href="@url"  target="_blank">
+                            <img src="@{@WorkContext.ImageCDN}/upload/advert/@info.Body" onerror="nofindimg();" alt="@info.ExtField1" class="goodsimg"/></a><br>
+                        <p class="f1">
+                            <a href="@url">@info.ExtField1</a></p>
+                        <p class="">
+                            市场价：<font class="market">￥@info.ExtField2 元</font>
+                            <br>
+                            本店价：<font class="f1"> ￥@info.ExtField3 元</font>
+                        </p>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="blank">
+        </div>
+        <div class="xm-box">
+            <div class="title">
+                <span class="floor-icon"><i></i><b></b></span>
+                <h2>
+                    保健食品</h2>
+                <a class="more" href="@Url.Action("category", "catalog", new RouteValueDictionary { { "cateId", 76 } })">
+                    更多</a></div>
+            <div class="clearfix xm-boxs">
+                @{
+                    List<AdvertInfo> floor1AdvertList2 = Adverts.GetAdvertList(11);
+                }
+                @foreach (AdvertInfo info in floor1AdvertList2)
+                {
+                    string url = info.Url.Length > 3 ? info.Url : Url.Action("product", "catalog", new RouteValueDictionary { { "pid", TypeHelper.StringToInt(info.ExtField5) } }); 
+
+                    <div class="goodsItem goodsItems">
+                        <a href="@url"  target="_blank">
+                            <img src="@{@WorkContext.ImageCDN}/upload/advert/@info.Body" onerror="nofindimg();" alt="@info.ExtField1" class="goodsimg"/></a><br>
+                        <p class="f1">
+                            <a href="@url">@info.ExtField1</a></p>
+                        <p class="">
+                            市场价：<font class="market">￥@info.ExtField2 元</font>
+                            <br>
+                            本店价：<font class="f1"> ￥@info.ExtField3 元</font>
+                        </p>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="blank">
+        </div>
+        <div class="xm-box">
+            <div class="title">
+                <span class="floor-icon"><i></i><b></b></span>
+                <h2>
+                    保健器材</h2>
+                <a class="more" href="@Url.Action("category", "catalog", new RouteValueDictionary { { "cateId", 113 } })">
+                    更多</a></div>
+            <div class="clearfix xm-boxs">
+                @{
+                    List<AdvertInfo> floor1AdvertList3 = Adverts.GetAdvertList(12);
+                }
+                @foreach (AdvertInfo info in floor1AdvertList3)
+                { 
+                    string url = info.Url.Length > 3 ? info.Url : Url.Action("product", "catalog", new RouteValueDictionary { { "pid", TypeHelper.StringToInt(info.ExtField5) } }); 
+
+                    <div class="goodsItem goodsItems">
+                        <a href="@url"  target="_blank">
+                            <img src="@{@WorkContext.ImageCDN}/upload/advert/@info.Body" onerror="nofindimg();" alt="@info.ExtField1" class="goodsimg"/></a><br>
+                        <p class="f1">
+                            <a href="@url">@info.ExtField1</a></p>
+                        <p class="">
+                            市场价：<font class="market">￥@info.ExtField2 元</font>
+                            <br>
+                            本店价：<font class="f1"> ￥@info.ExtField3 元</font>
+                        </p>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="blank">
+        </div>
+        <div class="xm-box">
+            <div class="title">
+                <span class="floor-icon"><i></i><b></b></span>
+                <h2>
+                    化妆品</h2>
+                <a class="more" href="@Url.Action("category", "catalog", new RouteValueDictionary { { "cateId", 107 } })">
+                    更多</a></div>
+            <div class="clearfix xm-boxs">
+                @{
+                    List<AdvertInfo> floor1AdvertList4 = Adverts.GetAdvertList(13);
+                }
+                @foreach (AdvertInfo info in floor1AdvertList4)
+                { 
+                     string url = info.Url.Length > 3 ? info.Url : Url.Action("product", "catalog", new RouteValueDictionary { { "pid", TypeHelper.StringToInt(info.ExtField5) } }); 
+
+                    <div class="goodsItem goodsItems">
+                        <a href="@url"  target="_blank">
+                            <img src="@{@WorkContext.ImageCDN}/upload/advert/@info.Body" onerror="nofindimg();" alt="@info.ExtField1" class="goodsimg"/></a><br>
+                        <p class="f1">
+                            <a href="@url">@info.ExtField1</a></p>
+                        <p class="">
+                            市场价：<font class="market">￥@info.ExtField2 元</font>
+                            <br>
+                            本店价：<font class="f1"> ￥@info.ExtField3 元</font>
+                        </p>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="blank">
+        </div>
+        <div class="blank">
+        </div>
+        <div class="xm-box">
+            <div class="title">
+                <span class="floor-icon"><i></i><b></b></span>
+                <h2>
+                    洗护用品</h2>
+                <a class="more" href="@Url.Action("category", "catalog", new RouteValueDictionary { { "cateId", 78 } })">
+                    更多</a></div>
+            <div class="clearfix xm-boxs">
+                @{
+                    List<AdvertInfo> floor1AdvertList5 = Adverts.GetAdvertList(24);
+                }
+                @foreach (AdvertInfo info in floor1AdvertList5)
+                { 
+                     string url = info.Url.Length > 3 ? info.Url : Url.Action("product", "catalog", new RouteValueDictionary { { "pid", TypeHelper.StringToInt(info.ExtField5) } }); 
+
+                    <div class="goodsItem goodsItems">
+                        <a href="@url"  target="_blank">
+                            <img src="@{@WorkContext.ImageCDN}/upload/advert/@info.Body" onerror="nofindimg();" alt="@info.ExtField1" class="goodsimg"/></a><br>
+                        <p class="f1">
+                            <a href="@url">@info.ExtField1</a></p>
+                        <p class="">
+                            市场价：<font class="market">￥@info.ExtField2 元</font>
+                            <br>
+                            本店价：<font class="f1"> ￥@info.ExtField3 元</font>
+                        </p>
+                    </div>
+                }
+            </div>
+        </div>
+         <div class="blank">
+        </div>
+        <div class="blank">
+        </div>
+        <div class="xm-box">
+            <div class="title">
+                <span class="floor-icon"><i></i><b></b></span>
+                <h2>情趣用品</h2>
+                <a class="more" href="@Url.Action("category", "catalog", new RouteValueDictionary { { "cateId", 131 } })">
+                    更多</a></div>
+            <div  class="clearfix xm-boxs">
+                @{
+                    List<AdvertInfo> floor1AdvertList6 = Adverts.GetAdvertList(26);
+                }
+                @foreach (AdvertInfo info in floor1AdvertList6)
+                { 
+                     string url = info.Url.Length > 3 ? info.Url : Url.Action("product", "catalog", new RouteValueDictionary { { "pid", TypeHelper.StringToInt(info.ExtField5) } }); 
+
+                    <div class="goodsItem goodsItems">
+                        <a href="@url"  target="_blank">
+                            <img src="@{@WorkContext.ImageCDN}/upload/advert/@info.Body" onerror="nofindimg();" alt="@info.ExtField1" class="goodsimg"/></a><br>
+                        <p class="f1">
+                            <a href="@url">@info.ExtField1</a></p>
+                        <p class="">
+                            市场价：<font class="market">￥@info.ExtField2 元</font>
+                            <br>
+                            本店价：<font class="f1"> ￥@info.ExtField3 元</font>
+                        </p>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="blank">
+        </div>
+        <div class="blank">
+        </div>
+        <div class="xm-box">
+            <div class="title">
+                <span class="floor-icon"><i></i><b></b></span>
+                <h2>
+                    保健礼品</h2>
+                <a class="more" href="@Url.Action("category", "catalog", new RouteValueDictionary { { "cateId", 77 } })">
+                    更多</a></div>
+            <div class="clearfix xm-boxs">
+                @{
+                    List<AdvertInfo> floor1AdvertList7 = Adverts.GetAdvertList(25);
+                }
+                @foreach (AdvertInfo info in floor1AdvertList7)
+                { 
+                     string url = info.Url.Length > 3 ? info.Url : Url.Action("product", "catalog", new RouteValueDictionary { { "pid", TypeHelper.StringToInt(info.ExtField5) } }); 
+
+                    <div class="goodsItem goodsItems">
+                        <a href="@url"  target="_blank">
+                            <img src="@{@WorkContext.ImageCDN}/upload/advert/@info.Body" onerror="nofindimg();" alt="@info.ExtField1" class="goodsimg"/></a><br>
+                        <p class="f1">
+                            <a href="@url">@info.ExtField1</a></p>
+                        <p class="">
+                            市场价：<font class="market">￥@info.ExtField2 元</font>
+                            <br>
+                            本店价：<font class="f1"> ￥@info.ExtField3 元</font>
+                        </p>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="blank">
+        </div>
+    </div>
+</div>

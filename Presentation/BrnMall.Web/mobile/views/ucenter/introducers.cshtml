@@ -1,0 +1,104 @@
+﻿@model BrnMall.Web.Mobile.Models.IntroduceShowModel
+@{
+    Layout = "~/mobile/Views/Shared/_layout.cshtml";
+    ViewBag.Title = "介绍人关系";
+}
+@section headerSection{
+    <link href="@{@WorkContext.CSSCDN}/mobile/css/ucenter.css" rel="stylesheet" type="text/css">
+}
+<div class="clear" style="height: 20px;">
+</div>
+<div class="userFormC">
+    <div class="con" style="font-weight: bold;">
+        我的介绍人：
+    </div>
+    <div class="con">
+        @if (Model.introducer != null)
+        {
+            <table width="70%" style="font-size: 85%;">
+                <thead>
+                    <tr>
+                        <th width="120" align="left">
+                            昵称
+                        </th>
+                        <th width="120" align="left">
+                            用户名
+                        </th>
+                    </tr>
+                    <tr>
+                        <td>
+                            &nbsp;
+                        </td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>@Model.introducer.NickName
+                        </td>
+                        <td>@Model.introducer.UserName
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            &nbsp;
+                        </td>
+                    </tr>
+                </tbody>
+            </table>  
+        }
+        else
+        { 
+            @:无
+                                        }
+    </div>
+</div>
+<div class="clear" style="height: 20px;">
+</div>
+<div class="userFormC">
+    <div class="con" style="font-weight: bold;">
+        @("我介绍的会员（" + Model.introduceCount + "人）")：
+    </div>
+    <div class="con">
+        @if (Model.MyIntroducers != null && Model.MyIntroducers.Count() > 0)
+        {
+            <table width="100%"  style="font-size: 85%;">
+                <thead>
+                    <tr>
+                        <th width="120" align="left">
+                            昵称
+                        </th>
+                        <th width="120" align="left">
+                            用户名
+                        </th>
+                        <th width="200" align="left">
+                            注册时间
+                        </th>
+                    </tr>
+                    <tr>
+                        <td>
+                            &nbsp;
+                        </td>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.MyIntroducers)
+                    {
+                        <tr>
+                            <td>@item.NickName
+                            </td>
+                            <td>@item.UserName
+                            </td>
+                            <td>@item.AddTime
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                &nbsp;
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>

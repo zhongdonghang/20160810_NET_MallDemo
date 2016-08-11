@@ -1,0 +1,77 @@
+﻿@model BrnMall.Web.Mobile.Models.RegisterModel
+@{
+    Layout = "~/mobile/Views/Shared/_layout.cshtml";
+    ViewBag.Title = "用户注册";
+}
+@section headerSection{
+    <link href="@{@WorkContext.CSSCDN}/mobile/css/account.css" rel="stylesheet" type="text/css">
+    <script src="@{@WorkContext.ScriptCDN}/mobile/scripts/account.js?v=1" type="text/javascript"></script>
+    <script type="text/javascript" src="/admin_mall/scripts/jquery.js"></script>
+    <script type="text/javascript" src="/admin_mall/scripts/jquery.validate.js"></script>
+    <script type="text/javascript" src="/admin_mall/scripts/jquery.validate.unobtrusive.js"></script>
+        <script type="text/javascript">
+        returnUrl = "@Model.ReturnUrl";
+        shadowName = "@Model.ShadowName";
+
+        function startTimer(totalTime){
+        var itv= null;
+        itv= setInterval(function(){
+            totalTime--;
+            $('#btnGetPhone').val("倒计时"+totalTime);
+            if( totalTime<=0 ) {
+                clearInterval(itv); itv= null;
+                $('#btnGetPhone').removeAttr("disabled");
+                $('#btnGetPhone').val("再次发送");
+            }
+        }, 1000);
+    }
+    $(function () {
+        $("#btnGetPhone").click(function () {
+            var phone = $('#username').val();
+            if (!phone) {
+                alert("请输入用户名");
+                return false;
+            }
+            var url = "@Url.Action("GetPhoneVerifyCode", "Account")";
+            $.post(url, { phoneNumber: $('#username').val() },
+                function (data) {
+                    if (data == "succ") {
+                        $('#btnGetPhone').attr("disabled","disabled");
+                        startTimer(60);
+                        $('#btnGetPhone').val("发送成功，再次发送");
+                    }
+                    else if (data == "failed") {
+                        $('#btnGetPhone').attr("disabled", "disabled");
+                        $('#btnGetPhone').val("发送不成功，再次发送");
+                        startTimer(1);
+                    }
+                    else {
+                        alert(data);
+                        $('#btnGetPhone').attr("disabled", "disabled");
+                        startTimer(0);
+                    }
+                }, null);
+        });
+    });
+    </script>
+}
+<div class="loginTable">
+  <form name="registerForm" action="">
+    <div class="itmeC"><input type="text" id="username" class="text" name="@Model.ShadowName" placeholder="用户名(仅限手机号注册)" /></div>
+    <div class="itmeC"><input type="password" class="text" name="password" placeholder="请设置密码" /></div>
+    <div class="itmeC"><input type="password" class="text" name="confirmPwd" placeholder="请确认密码" /></div>
+    <div class="itmeC"><input type="text" class="text" id="introduceName" name="introduceName" style="width:50%; float:left" placeholder="推荐者用户名" />
+    <a style=" font-size:x-small;height:38px; line-height:38px;">注册后不可更改！</a></div>
+    <div class="itmeC"><input type="text" class="text" id="phoneVerifyCode" name="phoneVerifyCode" style="width:50%; float:left" placeholder="短信验证码" />
+     <input type="button" id="btnGetPhone" class="grayBT left" style="height:38px; line-height:38px; margin-left:10px; padding:0 15px;" value="获取验证码" /></div>
+    @if (Model.IsVerifyCode)
+    {
+    <div class="itme"><div class="itmeC"><input type="text" class="text" name="verifyCode" style="width:100px; float:left;" placeholder="请输入验证码" /><img id="verifyImage" src="/mob/tool/verifyimage" onclick="this.src='/mob/tool/verifyimage?time=' + new Date()" style="width:100px; margin:0 10px; float:left; height:40px;" /><a href="javascript:void(0)" onclick="document.getElementById('verifyImage').src='/mob/tool/verifyimage?time=' + new Date()" class="left" style="line-height:40px;">换一张</a></div></div>
+    }
+     <div id="error_tip" style=" width:100%; color:Red;display:none"></div>
+    <div class="itmeC"><a href="javascript:register()" class="redBt" style="display:block; padding:0; height:38px; width:99%; text-align:center; line-height:38px;">注册</a></div>
+   <div class="table" style="padding-top:10px;">
+        <div class="cell" style=" width:100%;"><a href="@Url.Action("login")" style="color:#696969; font-size:80%; text-decoration:none">已有账号，直接登录</a></div>
+    </div>
+  </form>
+</div>

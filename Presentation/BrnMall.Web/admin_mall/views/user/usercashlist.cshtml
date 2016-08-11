@@ -1,0 +1,97 @@
+﻿@model BrnMall.Web.MallAdmin.Models.UserListModel
+
+@section header{
+<title>用户列表</title>
+<link type="text/css" rel="stylesheet" href="/admin_mall/content/css/site.css"/>
+<script type="text/javascript" src="/admin_mall/scripts/jquery.js"></script>
+<script type="text/javascript" src="/admin_mall/scripts/showlist.js"></script>
+    <link href="/admin_mall/content/jbox/Skins/Default/jbox.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="/admin_mall/content/jbox/jquery.jBox-2.3.min.js"></script>
+}
+
+@section body{
+<h1 class="rightH1">
+用户管理 &gt;&gt; 用户充值
+<div class="right">
+<a href="@Url.Action("add")" class="menuBT"><img src="/admin_mall/content/images/add.jpg"/>添加</a>
+<div class="clear"></div>
+</div>
+<div class="clear"></div>
+</h1>
+@using (Html.BeginForm("usercashlist", "user"))
+{
+<div class="dataListSearch">
+<table height="32">
+        <tbody>
+         <tr>
+        <td width="35"><img id="searchImg" src="/admin_mall/content/images/search1.gif"/></td>
+        <td>
+          会员等级：
+        </td>
+        <td width="110">
+          @Html.DropDownListFor(x => x.UserRid, ViewData["userRankList"] as List<SelectListItem>)
+        </td>
+        <td>
+          &nbsp;&nbsp;管理员组：
+        </td>
+        <td width="110">
+          @Html.DropDownListFor(x => x.MallAGid, ViewData["mallAdminGroupList"] as List<SelectListItem>)
+        </td>
+        <td>
+          用户名：
+        </td>
+        <td width="130">
+          	@Html.TextBox("UserName", Model.UserName, new { height = "18" })
+        </td>
+       <td>
+       <input id="SearchUser" name="SearchUser" type="image" class="searchBut submit" src="/admin_mall/content/images/s.jpg" />
+       </td>
+      </tr>
+     </tbody></table>
+</div>
+
+<div class="dataList">
+<table width="100%">
+<thead>
+  <tr>
+    <th width="40" align="center"><input type="checkbox" id="allSelect"/></th>
+    <th width="140" align="left">用户名</th>
+    <th align="left">昵称</th>
+    <th width="80" align="left">可提现金额</th>
+    <th width="80" align="left">冻结金额</th>
+    <th width="180" align="left">手机</th>
+    <th width="140" align="left">权限</th>
+    <th width="150" align="left">注册访问</th>
+    </tr>
+</thead>
+  <tbody>
+  @foreach (DataRow row in Model.UserList.Rows)
+  {
+  <tr>
+    <td align="center"><input type="checkbox" value="@row["uid"]" selectItem="true" name="uidList" /></td>
+    <td>@row["username"]</td>
+    <td>@row["nickname"]</td>
+    <td>@row["useramount"]</td>
+    <td>@row["frozenamount"]</td>
+    <td>@row["mobile"]</td>
+    <td>@row["utitle"]<br />@row["atitle"]</td>
+    <td>@TypeHelper.ObjectToDateTime(row["registertime"]).ToString("yyyy-MM-dd HH:mm:ss")<br />@TypeHelper.ObjectToDateTime(row["lastvisittime"]).ToString("yyyy-MM-dd HH:mm:ss")</td>
+    </tr>
+  }
+</tbody>
+</table>
+</div>
+<div class="dataListEdit" style="padding:10px 0px;">
+<div style=" float:left; ">
+ 充值：<input type="text" style=" height:20px; width:50px;" id="cashAmount" />元&nbsp;&nbsp;&nbsp;&nbsp;
+ </div>
+<a url="@Url.Action("LoadCash")" class="batch batchLoadCash">批量充值</a>
+</div>
+<div class="dataListEdit">
+
+    <div class="page">
+    @Html.MallAdminPager(Model.PageModel)
+</div>
+</div>
+}
+}

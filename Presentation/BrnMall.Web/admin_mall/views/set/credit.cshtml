@@ -1,0 +1,152 @@
+﻿@model BrnMall.Web.MallAdmin.Models.CreditModel
+
+@section header{
+    <title>资金等级</title>
+    <link type="text/css" rel="stylesheet" href="/admin_mall/content/css/site.css"/>
+    <script type="text/javascript" src="/admin_mall/scripts/jquery.js"></script>
+    <script type="text/javascript" src="/admin_mall/scripts/jquery.validate.js"></script>
+    <script type="text/javascript" src="/admin_mall/scripts/jquery.validate.unobtrusive.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $(".addTag li").click(function () {
+                $(".addTag li").removeClass("hot");
+                $(this).addClass("hot");
+                $(".addTable").hide().eq($(this).index()).show(0);
+
+            })
+
+            $(".addBt").click(function () {
+                $("form:first").submit();
+                return false;
+            })
+        });
+    </script>
+}
+
+@section body{
+<h1 class="rightH1">
+系统设置 &gt;&gt; 积分设置
+<div class="right">
+<div class="clear"></div>
+</div>
+<div class="clear"></div>
+</h1>
+<ul class="addTag">
+    <li class="hot"><a href="javascript:;">资金配置</a></li>
+    <li><a href="javascript:;">等级积分</a></li>
+    <div class="clear"></div>
+</ul>
+@using (Html.BeginForm())
+{
+<div class="addTable">
+<table width="100%">
+         <tr>
+    <td width="140px" align="right">推荐者抽水百分比：</td>
+    <td>
+    @Html.TextBoxFor(x => x.Point, new { @class = "input", size = "5" }) % @Html.ValidationMessageFor(x => x.Point)
+    </td>
+    </tr>
+
+     <tr>
+    <td align="right">最低申请提现条件额度：</td>
+    <td>
+   @Html.TextBoxFor(x => x.MinAmount, new { @class = "input", size = "10" })元  &nbsp;&nbsp;&nbsp;账户可提现资金大于或等于该数时，才有资格申请提现。 @Html.ValidationMessageFor(x => x.MinAmount)
+    </td>
+    </tr>
+         <tr>
+    <td align="right">最低提现额度：</td>
+    <td>
+   @Html.TextBoxFor(x => x.MinWithdrawal, new { @class = "input", size = "10" })元  &nbsp;&nbsp;&nbsp;申请提现的最低额度，即申请提现金额不能低于该值。 @Html.ValidationMessageFor(x => x.MinWithdrawal)
+    </td>
+    </tr>
+    <tr>
+    <td align="right">&nbsp;</td>
+    <td>
+    <a href="" class="addBt" id="sumbitBut1" ><img src="/admin_mall/content/images/submit.jpg" /></a>
+    </td>
+    </tr>
+  <tr>
+    <td align="right">&nbsp;</td>
+    <td>&nbsp;</td>
+    </tr>
+</table>
+</div>
+<div class="addTable hide">
+<table width="100%">
+         <tr>
+    <td width="110px" align="right">名称：</td>
+    <td>
+    @Html.TextBoxFor(x => x.RankCreditName, new { @class = "input", size = "35" })@Html.ValidationMessageFor(x => x.RankCreditName)
+    </td>
+    </tr>
+
+         <tr>
+    <td align="right">注册：</td>
+    <td>
+   @Html.TextBoxFor(x => x.RegisterRankCredits, new { @class = "input", size = "35" })@Html.ValidationMessageFor(x => x.RegisterRankCredits)
+    </td>
+    </tr>
+
+         <tr>
+    <td align="right">每天登录：</td>
+    <td>
+   @Html.TextBoxFor(x => x.LoginRankCredits, new { @class = "input", size = "35" })@Html.ValidationMessageFor(x => x.LoginRankCredits)
+    </td>
+    </tr>
+
+         <tr>
+    <td align="right">验证邮箱：</td>
+    <td>
+   @Html.TextBoxFor(x => x.VerifyEmailRankCredits, new { @class = "input", size = "35" })@Html.ValidationMessageFor(x => x.VerifyEmailRankCredits)
+    </td>
+    </tr>
+
+         <tr>
+    <td align="right">验证手机：</td>
+    <td>
+   @Html.TextBoxFor(x => x.VerifyMobileRankCredits, new { @class = "input", size = "35" })@Html.ValidationMessageFor(x => x.VerifyMobileRankCredits)
+    </td>
+    </tr>
+
+             <tr>
+    <td align="right">完善用户信息：</td>
+    <td>
+   @Html.TextBoxFor(x => x.CompleteUserInfoRankCredits, new { @class = "input", size = "35" })@Html.ValidationMessageFor(x => x.CompleteUserInfoRankCredits)
+    </td>
+    </tr>
+
+             <tr>
+    <td align="right">完成订单：</td>
+    <td>
+   @Html.TextBoxFor(x => x.CompleteOrderRankCredits, new { @class = "input", size = "35" })以订单金额的百分比计算 @Html.ValidationMessageFor(x => x.CompleteOrderRankCredits)
+    </td>
+    </tr>
+
+                 <tr>
+    <td align="right">评价商品：</td>
+    <td>
+   @Html.TextBoxFor(x => x.ReviewProductRankCredits, new { @class = "input", size = "35" })@Html.ValidationMessageFor(x => x.ReviewProductRankCredits)
+    </td>
+    </tr>
+
+             <tr>
+    <td align="right">每天最大发放：</td>
+    <td>
+   @Html.TextBoxFor(x => x.DayMaxSendRankCredits, new { @class = "input", size = "35" })@Html.ValidationMessageFor(x => x.DayMaxSendRankCredits)
+    </td>
+    </tr>
+
+    <tr>
+    <td align="right">&nbsp;</td>
+    <td>
+    <a href="" class="addBt" id="sumbitBut2" ><img src="/admin_mall/content/images/submit.jpg" /></a>
+    </td>
+    </tr>
+  <tr>
+    <td align="right">&nbsp;</td>
+    <td>&nbsp;</td>
+    </tr>
+</table>
+</div>
+}
+}

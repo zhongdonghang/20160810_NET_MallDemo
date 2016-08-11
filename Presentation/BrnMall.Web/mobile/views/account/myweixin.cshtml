@@ -1,0 +1,82 @@
+﻿@model BrnMall.Core.PartUserInfo
+@{
+    Layout = "~/mobile/Views/Shared/_layout.cshtml";
+    ViewBag.Title = "微信账号绑定";
+    string removebindUrl = Url.Action("RemoveBindingAccount", "Account");
+    string loginUrl = Url.Action("Login", "Account");
+    string logoutUrl = Url.Action("Logout", "Account");
+}
+@section headerSection{
+    <link href="@{@WorkContext.CSSCDN}/mobile/css/ucenter.css" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="/admin_mall/scripts/jquery.js"></script>
+    <script>
+        var removebinding = function () {
+            if (confirm("是否解除绑定？")) {
+                $.ajax({
+                    url: '@removebindUrl', //调用ashx获得订单状态
+                    type: "GET",
+                    dataType: "json",
+                    data: "",
+                    success: function (data) {
+                        if (data == "succ") { //解除成功
+                            alert("解除成功！");
+                            location.href = '@Url.Action("MyWeiXin")';
+                        }
+                        else {
+                            alert("解除失败！");
+                        }
+                    }
+                });
+            }
+        };
+        var changebinding = function () {
+            var display = $('#changeshow').css('display');
+            if (display == 'none') {
+                document.getElementById('changeshow').style.display = "block";
+            }
+            else {
+                document.getElementById('changeshow').style.display = "none";
+            }
+        };
+    </script>
+}
+<div class="clear" style="height: 20px;">
+</div>
+<div class="userFormC">
+    <div class="con" style="font-weight: bold;">
+        当前微信绑定的账号：
+    </div>
+    <div class="con">
+        <table width="90%">
+            <tbody>
+                <tr>
+                    @if (Model == null)
+                    {
+                        <td>
+                        暂未绑定
+                        </td>
+                        <td>
+                        <input type="button" class="actionbutton" onclick="javascript:window.location.href='@loginUrl'"  value="立即绑定"/> 
+                        </td>
+                    }
+                    else
+                    { 
+                        <td>
+                        @Model.UserName
+                        </td>
+                        <td>
+                       <input type="button" class="actionbutton" onclick="removebinding()"  value="解除绑定"/> 
+                        </td>
+                        <td>
+                        <input type="button" class="actionbutton" onclick="changebinding()"   value="更改账号"/> 
+                        </td>
+                    }
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="clear"></div>
+     <div style=" margin-top:30px; display:none; font-size:85%; color:#E4393C;" id="changeshow" >
+        <p>更换账号必须先解除与现账号的关系，才可重新更换绑定！</p>
+    </div>
+</div>

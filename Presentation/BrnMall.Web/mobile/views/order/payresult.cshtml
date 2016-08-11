@@ -1,0 +1,15 @@
+﻿@model BrnMall.Web.Mobile.Models.PayResultModel
+@{
+    Layout = "~/mobile/Views/Shared/_layout.cshtml";
+    ViewBag.Title = "支付结果";
+}
+<div style="padding:40px; font-size:20px; text-align:center;">
+    @if (Model.State == 0)
+    {
+        @:支付失败 
+    }
+    else
+    {
+        @:支付成功 
+    }
+</div>

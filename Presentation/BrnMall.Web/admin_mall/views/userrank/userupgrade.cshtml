@@ -1,0 +1,143 @@
+﻿@{
+    List<UserRankInfo> ranklist = ViewData["ranklist"] as List<UserRankInfo>;
+    string ajaxSearchStr = Url.Action("GetUserRankCredits","UserRank");
+    string ajaxSendStr = Url.Action("SendUserRankCredits", "UserRank");
+  }
+@section header{
+    <title>会员升级</title>
+    <link type="text/css" rel="stylesheet" href="/admin_mall/content/css/site.css" />
+    <script type="text/javascript" src="/admin_mall/scripts/jquery.js"></script>
+    <script type="text/javascript" src="/admin_mall/scripts/showlist.js"></script>
+      <script type="text/javascript">
+          $(function () {
+              $("#searchCredit").click(function () {
+                  $.ajax({
+                      url: '@ajaxSearchStr',
+                      type: "GET",
+                      dataType: "json",
+                      data: { username: $("#rusername").val() },
+                      success: function (data) {
+                          var cs = document.getElementById("creditshow");
+                          cs.innerHTML = data;
+                          cs.style.display = "block";
+                      }
+                  });
+              });
+
+              $("#sendCredit").click(function () {
+
+                  var cs = document.getElementById("sendshow");
+                  var credits = $("#rankCredits").val();
+                  var reg = /^\d+$/;
+                  if (!credits.match(reg)) {
+                      cs.innerHTML = "积分请输入整数！";
+                      cs.style.display = "block";
+                  }   
+                  $.ajax({
+                      url: '@ajaxSendStr',
+                      type: "GET",
+                      dataType: "json",
+                      data: { username: $("#rusername").val(), credit: credits },
+                      success: function (data) {
+                          cs.innerHTML = data;
+                          cs.style.display = "block";
+                      }
+                  });
+              });
+          });
+                            </script>
+}
+@section body{
+    <h1 class="rightH1">
+        用户管理 &gt;&gt; 会员升级
+        <div class="right">
+            <a href="@Url.Action("Add")" class="menuBT">
+                <img src="/admin_mall/content/images/add.jpg" />添加</a>
+            <div class="clear">
+            </div>
+        </div>
+        <div class="clear">
+        </div>
+    </h1>
+    <div class="table_top">
+    </div>
+        <div class="dataList">
+            <table width="100%">
+                <thead>
+                    <tr>
+                        <th width="20">
+                        </th>
+                        <th align="left">
+                            等级名称
+                        </th>
+                        <th width="120" align="left">
+                            折扣
+                        </th>
+                        <th width="120" align="left">
+                            积分下限
+                        </th>
+                        <th width="120" align="left">
+                            积分上限
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (UserRankInfo info in ranklist)
+                    {
+                        string discounstr = info.Discount + "折";
+                        if (info.CreditsLower == 0)
+                        {
+                            discounstr = "原价";
+                        }
+                        else if (info.CreditsUpper == -1)
+                        {
+                            discounstr = "队员价";
+                        }
+                        <tr>
+                            <td>
+                            </td>
+                            <td>@info.Title
+                            </td>
+                            <td>@discounstr
+                            </td>
+                            <td>@info.CreditsLower
+                            </td>
+                            <td>@info.CreditsUpper
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    <div class="table_bottom" style="margin-left: 15px;">
+        <div class="addTable" style="margin-left: 15px; margin-bottom: 10px; padding-top: 10px;
+            border: 2px solid #dbeffa">
+            <table width="600px;">
+                <tbody>
+                    <tr>
+                        <td width="120px" align="right">用户名：</td>
+                        <td width="120px"><input style="padding:4px;" id="rusername" name="rusername" type="text" value="" /></td>
+                        <td>
+                           <input id="searchCredit" name="searchCredit" type="image" class="searchBut"
+                                style="margin:0px 6px; padding:0px;" src="/admin_mall/content/images/s.jpg" />
+                        </td>
+                         <td width="300px">
+                          <a style=" display:none; color:Red" id="creditshow" ></a>
+                        </td>
+                          <tr>
+                        <td width="120px" align="right">等级积分：</td>
+                        <td width="120px"><input style="padding:4px;" id="rankCredits" name="rUserName" type="text" value="" /></td>
+                        <td>
+                            <input id="sendCredit" name="sendCredit" type="image" class="searchBut"
+                                style="margin:0px 6px; padding:0px;" src="/admin_mall/content/images/a.jpg" />
+                          
+                        </td>
+                         <td width="300px">
+                          <a style=" display:none; color:Red" id="sendshow" ></a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+}

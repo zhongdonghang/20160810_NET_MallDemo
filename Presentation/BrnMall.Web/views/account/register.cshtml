@@ -1,0 +1,166 @@
+﻿@model BrnMall.Web.Models.RegisterModel
+@{
+    Layout = "~/Views/Shared/_layout.cshtml";
+    ViewBag.Title = "用户注册-" + WorkContext.MallConfig.SiteTitle;
+}
+@section headerSection{
+    <link href="@{@WorkContext.CSSCDN}/css/base.css" rel="stylesheet" type="text/css" />
+    <script src="@{@WorkContext.ScriptCDN}/scripts/account.js?v=1" type="text/javascript"></script>
+    <script type="text/javascript" src="/scripts/jquery.validate.js"></script>
+    <script type="text/javascript" src="/scripts/jquery.validate.unobtrusive.js"></script>
+    <style>
+      table   {   border-collapse:separate;   border-spacing:15px;   } 
+      table td em{color:Red;}
+    </style>
+    <script type="text/javascript">
+        returnUrl = "@Model.ReturnUrl";
+        shadowName = "@Model.ShadowName";
+
+         function startTimer(totalTime){
+        var itv= null;
+        itv= setInterval(function(){
+            totalTime--;
+            $('#btnGetPhone').val("倒计时"+totalTime);
+            if( totalTime<=0 ) {
+                clearInterval(itv); itv= null;
+                $('#btnGetPhone').removeAttr("disabled");
+                $('#btnGetPhone').val("再次发送");
+            }
+        }, 1000);
+    }
+    $(function () {
+        $("#btnGetPhone").click(function () {
+            var phone = $('#username').val();
+            if (!phone) {
+                Showbo.Msg.alert('请输入用户名');
+                return false;
+            }
+            var url = "@Url.Action("GetPhoneVerifyCode", "Account")";
+            $.post(url, { phoneNumber: $('#username').val() },
+                function (data) {
+                    if (data == "succ") {
+                        $('#btnGetPhone').attr("disabled","disabled");
+                        startTimer(60);
+                        $('#btnGetPhone').val("发送成功，再次发送");
+                    }
+                    else if (data == "failed") {
+                        $('#btnGetPhone').attr("disabled", "disabled");
+                        $('#btnGetPhone').val("发送不成功，再次发送");
+                        startTimer(1);
+                    }
+                    else {
+                        Showbo.Msg.alert(data);
+                        $('#btnGetPhone').attr("disabled", "disabled");
+                        startTimer(0);
+                    }
+                }, null);
+        });
+    });
+    </script>
+}
+<div class="block block1">
+    <div class="block box">
+        <div class="blank">
+        </div>
+        <div id="ur_here">
+            当前位置: <a>用户中心</a> <code>&gt;</code> 注册
+        </div>
+    </div>
+    <div class="blank">
+    </div>
+    <div class="usBox clearfix">
+        <div class="usBox_1 f_l">
+            <div class="login_tab">
+                <ul>
+                    <li ><a href="@Url.Action("login")">用户登录</a></li>
+                    <li class="active"><a href="@Url.Action("register")">用户注册</a></li>
+                </ul>
+            </div>
+            <form name="registerForm">
+            <table width="100%" border="0" align="left" cellpadding="3" cellspacing="5">
+                <tbody>
+                    <tr>
+                        <td width="20%" align="right" valign="middle" style=" font-size:larger">
+                            <em>*</em>用户名&nbsp;&nbsp;&nbsp;
+                        </td>
+                        <td width="70%">
+                            <input name="@Model.ShadowName" id="username" type="text" size="25" class="inputBg userName">仅限手机号码注册
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right" style="font-size:larger">
+                            <em>*</em>密码&nbsp;&nbsp;&nbsp;
+                        </td>
+                        <td>
+                            <input name="password" type="password" size="15" class="inputBg passWord">
+                        </td>
+                    </tr>
+                     <tr>
+                        <td align="right" style="font-size:larger">
+                            <em>*</em>确认密码密码&nbsp;&nbsp;&nbsp;
+                        </td>
+                        <td>
+                            <input name="confirmPwd" type="password" size="15" class="inputBg confirmPwd">
+                        </td>
+                    </tr>
+                     <tr>
+                        <td width="25%" align="right" style=" font-size:larger">
+                           推荐者用户名&nbsp;&nbsp;&nbsp;
+                        </td>
+                        <td width="65%">
+                            <input name="introduceName" type="text" size="25" class="inputBg introduceName">有推荐的用户，注册成功后不可更改！
+                        </td>
+                    </tr>
+                     <tr>
+                        <td align="right" style="font-size:larger">
+                            <em>*</em>短信验证&nbsp;&nbsp;&nbsp;
+                        </td>
+                        <td>
+                            <input type="text" name="phoneVerifyCode" class="inputBg phoneVerifyCode" style="float:left;" />
+                                &nbsp;&nbsp;
+                                <input type="button" id="btnGetPhone" class="grayBT left" style="height:30px; line-height:30px; margin-left:10px; padding:0 15px;" value="获取验证码" />
+                        </td>
+                    </tr>
+                     <tr>
+                        <td align="right" style="font-size:larger">
+                            <em>*</em>验证码&nbsp;&nbsp;&nbsp;
+                        </td>
+                        <td>
+                            <input type="text" name="verifyCode" autocomplete="off" class="inputBg" style="float:left;" />
+                                &nbsp;&nbsp;<img id="verifyImage" style="cursor: hand; height:30px; padding:0 15px;" title="点击刷新验证码" onclick="this.src='/tool/verifyimage?time=' + new Date()"
+                                    src="/tool/verifyimage" class="left" />
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                    <td>
+                    </td>
+                    <td >
+                        <input type="hidden" name="act" value="act_login"/>
+                        <input type="button" name="submit" value="" onclick="register()" class="us_Submit_reg"/>
+                        <div id="error_tip" style=" width:100%; color:Red; display:none"></div>
+                    </td>
+                    </tr>
+                    <tr>
+                        <td>
+                        </td>
+                        <td>
+                            <a ></a>&nbsp;&nbsp;&nbsp;<a href="@Url.Action("login")" class="f3">已经注册过，立即登录</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            </form>
+            <div class="blank">
+            </div>
+        </div>
+        <div class="usTxt">
+            @{
+                List<AdvertInfo> loginAdvertList = Adverts.GetAdvertList(7);
+            }
+            <a href="@loginAdvertList[0].Url" title="" target="_blank">
+            <img src="@{@WorkContext.ImageCDN}/upload/advert/@loginAdvertList[0].Body" style="width:370px;height:330px" class="left" /></a>
+        </div>
+    </div>
+</div>
+<div class="blank"></div>

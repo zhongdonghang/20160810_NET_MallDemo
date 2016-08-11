@@ -1,0 +1,61 @@
+﻿@model BrnMall.Web.Mobile.Models.OrderActionListModel
+@{
+    Layout = "~/mobile/Views/Shared/_layout.cshtml";
+    ViewBag.Title = "订单跟踪";
+}
+@section headerSection{
+    <link href="@{@WorkContext.CSSCDN}/mobile/css/ucenter.css" rel="stylesheet" type="text/css">
+}
+<div class="gz">
+<div class="gzTitle">
+<p>订单编号：@Model.OrderInfo.OSN</p>
+<p>状态：
+    @{
+        OrderState orderState = (OrderState)Model.OrderInfo.OrderState;
+    }
+    @switch (orderState)
+    {
+        case OrderState.WaitPaying:
+            @:等待付款
+            break;
+        case OrderState.Confirming:
+            @:待确认
+            break;
+        case OrderState.Confirmed:
+            @:已确认
+            break;
+        case OrderState.PreProducting:
+            @:已备货
+            break;
+        case OrderState.Sended:
+            @:已发货
+            break;
+        case OrderState.Received:
+            @:已收货
+            break;
+        case OrderState.Cancelled:
+            @:取消
+            break;
+        case OrderState.Returned:
+            @:退货
+            break;
+        case OrderState.Complete:
+            @:已完成
+            break;
+        default:
+            @:未知状态
+            break;
+    }
+</p>
+</div>
+
+<div class="gzCon">
+<span class="gzSJ"></span>
+<ul>
+@foreach (OrderActionInfo info in Model.OrderActionList)
+{
+<li><span class="icon on"></span><span>@info.ActionDes</span><span>@info.ActionTime.ToString("yyyy-MM-dd HH:mm:ss")</span></li>
+}
+</ul>
+</div>
+</div>
